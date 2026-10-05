@@ -6,8 +6,14 @@
 #   src/...       (Banking API source)
 set -e
 
-BANKING=~/banking-api
 SRC="$(dirname "$(realpath "$0")")"
+if [ -z "$BANKING" ]; then
+    if [ -d "$SRC/../../applications/banking-api" ]; then
+        BANKING="$(realpath "$SRC/../../applications/banking-api")"
+    else
+        BANKING=~/banking-api
+    fi
+fi
 OUT=/tmp/attack-01-shell-exec.tar.gz
 
 if [ ! -d "$BANKING/src" ]; then

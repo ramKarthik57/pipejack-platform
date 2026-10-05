@@ -11,6 +11,7 @@ This document maps all assets originating from **VM-1 (192.168.88.132)** to thei
 | `/home/ubuntu/nodejs-malicious/` | `security-fixtures/nodejs-malicious/` | npm postinstall socket exfiltration attack | FIXTURE |
 | `/home/ubuntu/python-malicious/` | `security-fixtures/python-malicious/` | setup.py background socket exfiltration attack | FIXTURE |
 | `/home/ubuntu/vuln-app/` | `security-fixtures/vuln-app/` | Multi-language testbed application | FIXTURE |
+| `/home/ubuntu/pipejack-dev/evil-pkg/` | `security-fixtures/evil-pkg/` | Rogue supply chain npm postinstall package fixture | FIXTURE |
 | `/home/ubuntu/attacks/01-shell-exec/` | `attacks/01-shell-exec/` | Scenario 01: Unauthorized /bin/sh binary execution | ATTACK SCENARIO |
 | `/home/ubuntu/attacks/02-http-exfil/` | `attacks/02-http-exfil/` | Scenario 02: Outbound HTTP exfiltration via curl | ATTACK SCENARIO |
 | `/home/ubuntu/attacks/03-fs-tamper/` | `attacks/03-fs-tamper/` | Scenario 03: Source code tampering during compilation | ATTACK SCENARIO |
