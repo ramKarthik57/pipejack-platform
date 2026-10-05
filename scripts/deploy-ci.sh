@@ -3,19 +3,33 @@
 # Run on VM-2 as user ubuntu (uses sudo for system paths)
 set -e
 
-REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+if [ -d "$ROOT_DIR/services/custom-ci" ]; then
+    SRC_DIR="$ROOT_DIR/services/custom-ci"
+elif [ -f "$SCRIPT_DIR/main.go" ]; then
+    SRC_DIR="$SCRIPT_DIR"
+elif [ -d "/home/ubuntu/custom-ci" ]; then
+    SRC_DIR="/home/ubuntu/custom-ci"
+else
+    echo "ERROR: Unable to locate custom-ci source directory" >&2
+    exit 1
+fi
+
 BIN_SRC="/tmp/custom-ci"
 BIN_DST="/usr/local/bin/pipejack-ci"
 
 echo "=== PipeJack CI deployment ==="
-echo "  repo:    $REPO_DIR"
+echo "  script:  $SCRIPT_DIR"
+echo "  source:  $SRC_DIR"
 echo "  binary:  $BIN_SRC -> $BIN_DST"
 echo
 
 # 1. Build if source has changed (or /tmp/custom-ci missing)
-if [ ! -f "$BIN_SRC" ] || [ "$REPO_DIR/main.go" -nt "$BIN_SRC" ]; then
+if [ ! -f "$BIN_SRC" ] || [ "$SRC_DIR/main.go" -nt "$BIN_SRC" ]; then
     echo "[1/4] building CI server..."
-    (cd "$REPO_DIR" && go build -o "$BIN_SRC" .)
+    (cd "$SRC_DIR" && go build -o "$BIN_SRC" .)
     echo "      built: $BIN_SRC"
 else
     echo "[1/4] binary up to date, skipping build"
