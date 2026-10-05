@@ -39,7 +39,7 @@ NOW() {
 
 FILE_SIZE=$(ls -lh "$TARFILE" | awk '{print $5}')
 FILE_SHA=$(sha256sum "$TARFILE" | awk '{print $1}')
-CI_ENDPOINT="http://192.168.88.133:8888/upload"
+CI_ENDPOINT="${CI_ENDPOINT:-http://192.168.88.133:8888/upload}"
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║     PIPEJACK SECURE CLIENT — BUILD PACKAGE UPLOADER    ║${RESET}"

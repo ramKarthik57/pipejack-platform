@@ -4,7 +4,14 @@ VM2=${VM2:-192.168.88.133}
 HOST="http://$VM2:8888/upload"
 
 declare -A RESULTS
-for dir in ~/attacks/[0-9]*/; do
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ATTACK_DIRS=("$SCRIPT_DIR"/[0-9]*/)
+if [ ! -d "${ATTACK_DIRS[0]}" ]; then
+    ATTACK_DIRS=(~/attacks/[0-9]*/)
+fi
+
+for dir in "${ATTACK_DIRS[@]}"; do
+    [ -d "$dir" ] || continue
     name=$(basename "$dir")
     echo
     echo "==========================================="
