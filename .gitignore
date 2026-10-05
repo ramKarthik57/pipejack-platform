@@ -4,11 +4,12 @@
 *.dll
 *.so
 *.dylib
-pipejackd
-pipejackd-static
-ci-server
-proctree
-testbuild
+# Compiled Binaries (exact binary paths)
+cmd/proctree/proctree
+cmd/proctree/testbuild
+cmd/pipejackd/pipejackd
+cmd/pipejackd/pipejackd-static
+services/custom-ci/ci-server
 
 # Go
 *.test
