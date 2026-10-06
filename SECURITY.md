@@ -34,8 +34,9 @@ If you discover a security vulnerability, policy bypass, container breakout, or 
 
 ---
 
-## Security Invariants Guaranteed by PipeJack
+## Security Invariants Enforced by PipeJack
 
-1. **Host-Level Isolation**: No build container process can execute unapproved binaries without triggering detection.
-2. **Deterministic Quarantine**: Any build violating policy is tagged as quarantine and denied deployment to production clusters.
-3. **Cryptographic Tamper-Evidence**: Attestation records signed with Ed25519 cannot be forged or reordered without invalidating the SHA-256 hash chain.
+1. **Host-Isolated Process Monitoring**: Host-isolated sensors monitor container cgroups from outside the container namespace. Any unapproved binary execution that persists across the 150 ms `/proc` polling interval or spawns tracked child processes is deterministically flagged against the security policy baseline.
+   *(Note: Sub-150 ms transient execution bursts that terminate prior to sensor sampling or in-memory shellcode execution without child process creation represent documented architectural boundaries; see [CURRENT_STATUS.md](docs/CURRENT_STATUS.md).)*
+2. **Deterministic Policy Enforcement & Quarantine**: Any build violating security policy is tagged as `<image>:<tag>-quarantine` and denied deployment or admission to production registries.
+3. **Cryptographic Tamper-Evidence**: Attestation records signed with Ed25519 cannot be forged or reordered without invalidating the sequential SHA-256 provenance hash chain.

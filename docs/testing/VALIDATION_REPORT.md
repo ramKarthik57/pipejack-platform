@@ -110,6 +110,6 @@ All 7 adversarial scenarios in `attacks/run-all.sh` were executed against the li
 ```
 
 **Result**:
-- **Direct Attack Vectors (01–06)**: **6 / 6 Blocked & Quarantined (100% Prevention Rate)**.
+- **Direct Attack Vectors (01–06)**: **6 / 6 Blocked & Quarantined (100% Block Rate Across Evaluated Benchmark Scenarios)**.
 - **Statistical Anomaly (07)**: **1 / 1 Detected & Signed in Provenance Ledger** (Advisory by default; Promotes to Hard Quarantine when `anomaly_block: true`).
 - **Cryptographic Attestation**: **100% Chain Intact Across All 282+ Historical Records**.

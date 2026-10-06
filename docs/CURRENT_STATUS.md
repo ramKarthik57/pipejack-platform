@@ -35,7 +35,7 @@ This document serves as the **single authoritative source of truth** regarding P
 | **Socket Monitor** (`netmon`) | Periodic inspection of `/proc/net/{tcp,tcp6,udp,udp6}` mapped to container PIDs. | **IMPLEMENTED & VERIFIED** | Outbound socket connections flagged. |
 | **Statistical Anomaly Engine** (`anomaly`) | Rolling 20-build window z-score evaluation (\(|z| > 3.0\)) over 4 telemetry metrics. | **IMPLEMENTED & VERIFIED (Advisory Default)** | Telemetry outliers logged; promotes to BLOCK when `anomaly_block: true`. |
 | **Policy Decision Point** (`pdp`) | Strict declarative YAML rule evaluation engine. | **IMPLEMENTED & VERIFIED** | Deterministic `ALLOW` (HTTP 200) or `BLOCK` (HTTP 403) verdict. |
-| **Attestation Ledger** (`attest`) | Ed25519 digital signature + SHA-256 Merkle `prev_hash` chaining per build. | **IMPLEMENTED & VERIFIED** | 282+ consecutive build records cryptographically verified intact. |
+| **Attestation Ledger** (`attest`) | Ed25519 digital signature + SHA-256 sequential `prev_hash` chaining per build. | **IMPLEMENTED & VERIFIED** | 282+ consecutive build records cryptographically verified intact. |
 
 ---
 
@@ -63,7 +63,7 @@ This document serves as the **single authoritative source of truth** regarding P
 | :--- | :--- | :--- | :--- | :--- |
 | **01-shell-exec** | Unauthorized `/bin/sh` execution | `proctree` | **BLOCK (403)** | Quarantined (`<tag>-quarantine`), deployment blocked |
 | **02-http-exfil** | Outbound `/usr/bin/curl` exfiltration | `proctree` + `egressfw` | **BLOCK (403)** | Dropped at netns firewall, quarantined |
-| **03-fs-tamper** | In-situ `src/` source code tampering | `fschecker` | **BLOCK (403)** | Merkle root hash mutated, quarantined |
+| **03-fs-tamper** | In-situ `src/` source code tampering | `fschecker` | **BLOCK (403)** | Workspace root digest mutated, quarantined |
 | **04-base64-shell**| Obfuscated Base64 shell pipe | `proctree` | **BLOCK (403)** | Kernel `/proc/<pid>/exe` caught, quarantined |
 | **05-multi-stage** | Staged dropper script in `/tmp` | `fschecker` + `proctree` | **BLOCK (403)** | Staged binary addition & exec caught, quarantined |
 | **06-slow-exfil** | Trickling low-rate socket transmission | `egressfw` + `netmon` | **BLOCK (403)** | SYN dropped by iptables netns chain, quarantined |
