@@ -2,6 +2,8 @@
 
 **Target Repository**: [https://github.com/ramKarthik57/pipejack-platform](https://github.com/ramKarthik57/pipejack-platform)  
 **Canonical Branch**: `main`  
+**Release Baseline Commit**: [`95d8b4f4ae8013fd06c5d76c95dd3c228acb4e7c`](https://github.com/ramKarthik57/pipejack-platform/commit/95d8b4f4ae8013fd06c5d76c95dd3c228acb4e7c)  
+**Live GitHub Actions CI Run**: [Run #37507103596 (GREEN / PASS)](https://github.com/ramKarthik57/pipejack-platform/actions/runs/37507103596)  
 **Evaluation Date**: October 6, 2026  
 **Auditor**: Principal Release & Security Architect (VM-2)
 
