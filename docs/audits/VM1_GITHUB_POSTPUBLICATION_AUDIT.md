@@ -23,7 +23,7 @@ Following the initial consolidation, repository restructuring, and public GitHub
    - Resolved hardcoded `BANKING=~/banking-api` paths in `attacks/01-shell-exec` through `attacks/07-anomaly` `build.sh` scripts. Replaced with dynamic discovery pointing to `../../applications/banking-api` relative to the script location, with automatic fallback to `~/banking-api`.
    - Updated `attacks/run-all.sh` to dynamically resolve attack scenario directories relative to the script location.
    - Updated `scripts/pipejack-upload.sh` to allow overriding `CI_ENDPOINT` via environment variables (`CI_ENDPOINT="${CI_ENDPOINT:-http://192.168.88.133:8888/upload}"`).
-6. **Documentation Synchronization**: Integrated VM-1's comprehensive final QA report [`docs/FINAL_VM1_QA_AUDIT.md`](file:///home/ubuntu/pipejack-platform-vm1-audit/docs/FINAL_VM1_QA_AUDIT.md) into the unified repository.
+6. **Documentation Synchronization**: Integrated VM-1's comprehensive final QA report [`FINAL_VM1_QA_AUDIT.md`](FINAL_VM1_QA_AUDIT.md) into the unified repository.
 7. **End-to-End Live CI Validation**:
    - Built fresh tarballs from repository sources and uploaded to VM-2 CI server (`192.168.88.133:8888`).
    - Clean builds: 4 / 4 ALLOW (Java Banking API, Java Calculator API, Node.js App, Python App).

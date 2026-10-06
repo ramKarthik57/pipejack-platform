@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 480" width="100%" height="100%" style="background:#0b0f19; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowPass" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+    </marker>
+    <marker id="arrowBlock" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="575" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#f3f4f6">PipeJack Multi-Sensor Build Security Lifecycle</text>
+  <text x="575" y="60" text-anchor="middle" font-size="13" fill="#94a3b8">Continuous Invariant Enforcement Across Build Isolation Boundaries</text>
+
+  <!-- Stage 1: Ingestion & Pre-Build Snapshot -->
+  <g transform="translate(30, 95)" filter="url(#cardShadow)">
+    <rect width="200" height="230" rx="10" fill="#111827" stroke="#1f2937" stroke-width="1.5"/>
+    <rect width="200" height="34" rx="10" fill="#1e293b"/>
+    <rect y="24" width="200" height="10" fill="#1e293b"/>
+    <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#38bdf8">1. PRE-BUILD SNAPSHOT</text>
+    
+    <text x="14" y="58" font-size="11" font-weight="600" fill="#e2e8f0">• Payload Ingestion</text>
+    <text x="24" y="74" font-size="10" fill="#94a3b8">Tarball unpacked to /workspace</text>
+    
+    <text x="14" y="100" font-size="11" font-weight="600" fill="#e2e8f0">• Stack Auto-Detection</text>
+    <text x="24" y="116" font-size="10" fill="#94a3b8">pom.xml, package.json, reqs.txt</text>
+
+    <text x="14" y="142" font-size="11" font-weight="600" fill="#38bdf8">• Merkle Baseline</text>
+    <text x="24" y="158" font-size="10" fill="#94a3b8">SHA-256 tree root computed</text>
+    <text x="24" y="172" font-size="10" fill="#94a3b8">All source hashes recorded</text>
+
+    <text x="14" y="198" font-size="11" font-weight="600" fill="#e2e8f0">• Container Genesis</text>
+    <text x="24" y="214" font-size="10" fill="#94a3b8">Docker cgroup v2 created</text>
+  </g>
+
+  <!-- Connector 1 -> 2 -->
+  <path d="M 230 210 L 255 210" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 2: Real-Time Execution Monitoring -->
+  <g transform="translate(260, 95)" filter="url(#cardShadow)">
+    <rect width="220" height="230" rx="10" fill="#111827" stroke="#1f2937" stroke-width="1.5"/>
+    <rect width="220" height="34" rx="10" fill="#1e293b"/>
+    <rect y="24" width="220" height="10" fill="#1e293b"/>
+    <text x="110" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#a855f7">2. REAL-TIME MONITORING</text>
+
+    <text x="14" y="58" font-size="11" font-weight="600" fill="#c084fc">• Process Tree Differ</text>
+    <text x="24" y="74" font-size="10" fill="#94a3b8">150ms cgroup /proc scan</text>
+    <text x="24" y="88" font-size="10" fill="#94a3b8">Binary allowlist enforcement</text>
+    <text x="24" y="102" font-size="10" fill="#f87171">Catches /bin/sh, curl, python</text>
+
+    <text x="14" y="128" font-size="11" font-weight="600" fill="#c084fc">• Network Egress Firewall</text>
+    <text x="24" y="144" font-size="10" fill="#94a3b8">iptables netns PIPEJACK_EGRESS</text>
+    <text x="24" y="158" font-size="10" fill="#94a3b8">Drops unauthorized outbound</text>
+
+    <text x="14" y="184" font-size="11" font-weight="600" fill="#c084fc">• Passive Socket Monitor</text>
+    <text x="24" y="200" font-size="10" fill="#94a3b8">Polls /proc/net/{tcp,udp}</text>
+    <text x="24" y="214" font-size="10" fill="#94a3b8">Correlates sockets to PIDs</text>
+  </g>
+
+  <!-- Connector 2 -> 3 -->
+  <path d="M 480 210 L 505 210" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 3: Post-Build Merkle Diff & Anomaly Scoring -->
+  <g transform="translate(510, 95)" filter="url(#cardShadow)">
+    <rect width="200" height="230" rx="10" fill="#111827" stroke="#1f2937" stroke-width="1.5"/>
+    <rect width="200" height="34" rx="10" fill="#1e293b"/>
+    <rect y="24" width="200" height="10" fill="#1e293b"/>
+    <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#38bdf8">3. POST-BUILD DIFF</text>
+
+    <text x="14" y="58" font-size="11" font-weight="600" fill="#38bdf8">• Merkle Tree Post-Scan</text>
+    <text x="24" y="74" font-size="10" fill="#94a3b8">Re-evaluates /workspace tree</text>
+    <text x="24" y="88" font-size="10" fill="#94a3b8">Identifies modified / added files</text>
+
+    <text x="14" y="114" font-size="11" font-weight="600" fill="#e2e8f0">• Source Invariant Check</text>
+    <text x="24" y="130" font-size="10" fill="#94a3b8">src/** changes -> VIOLATION</text>
+    <text x="24" y="144" font-size="10" fill="#94a3b8">target/** changes -> ALLOWED</text>
+
+    <text x="14" y="170" font-size="11" font-weight="600" fill="#e2e8f0">• Telemetry Aggregation</text>
+    <text x="24" y="186" font-size="10" fill="#94a3b8">Process count, fs mutations,</text>
+    <text x="24" y="200" font-size="10" fill="#94a3b8">sockets, build duration ms</text>
+    <text x="24" y="214" font-size="10" fill="#94a3b8">Z-score variance computed</text>
+  </g>
+
+  <!-- Connector 3 -> 4 -->
+  <path d="M 710 210 L 735 210" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 4: Policy Decision Point -->
+  <g transform="translate(740, 95)" filter="url(#cardShadow)">
+    <rect width="180" height="230" rx="10" fill="#111827" stroke="#1f2937" stroke-width="1.5"/>
+    <rect width="180" height="34" rx="10" fill="#1e293b"/>
+    <rect y="24" width="180" height="10" fill="#1e293b"/>
+    <text x="90" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#fbbf24">4. PDP DECISION</text>
+
+    <text x="14" y="60" font-size="11" font-weight="600" fill="#fde047">• Policy Evaluation</text>
+    <text x="20" y="78" font-size="10" fill="#94a3b8">Evaluates rule allowlists</text>
+    <text x="20" y="94" font-size="10" fill="#94a3b8">Zero-trust gatekeeping</text>
+
+    <path d="M 90 120 L 40 160" stroke="#10b981" stroke-width="2" marker-end="url(#arrowPass)"/>
+    <text x="40" y="150" font-size="10" font-weight="700" fill="#34d399">ALLOW</text>
+
+    <path d="M 90 120 L 140 160" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowBlock)"/>
+    <text x="120" y="150" font-size="10" font-weight="700" fill="#f87171">BLOCK</text>
+
+    <text x="90" y="195" text-anchor="middle" font-size="10" fill="#94a3b8">Deterministic</text>
+    <text x="90" y="210" text-anchor="middle" font-size="10" fill="#94a3b8">HTTP response emitted</text>
+  </g>
+
+  <!-- Connector 4 -> 5 -->
+  <path d="M 920 210 L 945 210" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 5: Outcomes & Attestation -->
+  <g transform="translate(950, 95)" filter="url(#cardShadow)">
+    <rect width="170" height="230" rx="10" fill="#111827" stroke="#1f2937" stroke-width="1.5"/>
+    <rect width="170" height="34" rx="10" fill="#1e293b"/>
+    <rect y="24" width="170" height="10" fill="#1e293b"/>
+    <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#34d399">5. OUTCOME &amp; ATTEST</text>
+
+    <rect x="10" y="45" width="150" height="60" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <text x="85" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="#a7f3d0">DEPLOY LIVE</text>
+    <text x="85" y="80" text-anchor="middle" font-size="9.5" fill="#a7f3d0">Push to :5000 Registry</text>
+    <text x="85" y="94" text-anchor="middle" font-size="9.5" fill="#a7f3d0">Launch Container</text>
+
+    <rect x="10" y="115" width="150" height="50" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+    <text x="85" y="133" text-anchor="middle" font-size="11" font-weight="700" fill="#fca5a5">QUARANTINE</text>
+    <text x="85" y="148" text-anchor="middle" font-size="9" fill="#fca5a5">Tag: &lt;tag&gt;-quarantine</text>
+    <text x="85" y="159" text-anchor="middle" font-size="9" fill="#fca5a5">Halt Deployment</text>
+
+    <rect x="10" y="175" width="150" height="45" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1"/>
+    <text x="85" y="192" text-anchor="middle" font-size="10" font-weight="700" fill="#c7d2fe">Ed25519 SIGNING</text>
+    <text x="85" y="208" text-anchor="middle" font-size="9" fill="#c7d2fe">SHA-256 Ledger Chain</text>
+  </g>
+
+  <!-- Invariant Banner across bottom -->
+  <g transform="translate(30, 360)">
+    <rect width="1090" height="85" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="25" y="28" font-size="13" font-weight="700" fill="#38bdf8">🔒 CORE SECURITY INVARIANTS ENFORCED BY PIPEJACK</text>
+    <text x="25" y="52" font-size="11" fill="#cbd5e1"><tspan font-weight="700" fill="#f3f4f6">Zero Unauthorized Processes:</tspan> Any non-allowlisted binary execution aborts build pipeline immediately.</text>
+    <text x="25" y="70" font-size="11" fill="#cbd5e1"><tspan font-weight="700" fill="#f3f4f6">Merkle Source Integrity:</tspan> Source tree modification during build triggers immutable quarantine. No unverified artifact ever reaches production.</text>
+  </g>
+</svg>

@@ -1,12 +1,8 @@
-# PipeJack Architecture Specification
+# PipeJack Architecture Documentation
 
-## 1. Executive Summary
-PipeJack is a multi-sensor, host-assisted zero-trust security architecture designed specifically for containerized CI/CD build environments. By enforcing invariants at the kernel, process, filesystem, and network layers, PipeJack prevents malicious payloads from executing unauthorized actions or contaminating production container registries.
+This directory contains the authoritative technical architecture specifications and design documentation for the PipeJack Zero-Trust CI/CD Security Platform.
 
-## 2. Sensor Subsystems
-1. **Process Tree Differ (`proctree`)**: Intercepts process creation events within the build cgroup using `/proc` scanning and eBPF tracepoints. Verifies executable hashes and binaries against strict policy allowlists.
-2. **Filesystem Merkle Baseline (`fschecker`)**: Generates pre-build and post-build cryptographic Merkle trees across the workspace. Prohibits modifications to source files while allowing legitimate compiler outputs.
-3. **Network Egress Firewall (`egressfw`) & Monitor (`netmon`)**: Establishes strict container network namespace isolation via iptables `PIPEJACK_EGRESS` rules and active socket-to-PID correlation.
-4. **Statistical Anomaly Engine (`anomaly`)**: Continuously monitors execution telemetry (duration, process count, mutation volume, network calls) against rolling 20-build baselines using z-score statistical variance.
-5. **Policy Decision Point (`pdp`)**: Evaluates multi-sensor telemetry against declarative YAML policies to issue authoritative `ALLOW` or `BLOCK` decisions.
-6. **Cryptographic Attestation Chain (`attest`)**: Signs canonical build records with Ed25519 digital signatures and chains each record to the previous build hash.
+- **[System Architecture Specification](PIPEJACK_ARCHITECTURE.md)**: Comprehensive deep dive into the multi-sensor detection engine, cgroup process differ, Merkle tree filesystem baselining, network egress containment, policy decision point (PDP), and Ed25519 cryptographic attestation ledger.
+- **[System Topology Diagram](../assets/system-topology.svg)**: Two-VM physical and network integration topology.
+- **[Build Security Lifecycle](../assets/multi-sensor-lifecycle.svg)**: Step-by-step invariant enforcement from ingestion to attestation.
+- **[Attestation Ledger Chain](../assets/attestation-chain.svg)**: Merkle-linked Ed25519 provenance ledger structure.

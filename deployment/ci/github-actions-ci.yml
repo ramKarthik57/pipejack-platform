@@ -1,0 +1,51 @@
+name: PipeJack CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Unit Tests & Code Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: false
+
+      - name: Test Core Security Engine (core/pipejack)
+        run: |
+          cd core/pipejack
+          go test -v -count=1 ./...
+          go vet ./...
+
+      - name: Test CI Orchestrator (services/custom-ci)
+        run: |
+          cd services/custom-ci
+          go test -v -count=1 ./...
+          go vet ./...
+
+      - name: Verify Secret & Credential Hygiene
+        run: |
+          echo "Scanning repository for accidentally committed private keys or secrets..."
+          # Check for unencrypted private keys
+          if grep -r --exclude-dir=".git" "BEGIN RSA PRIVATE KEY" . ; then
+            echo "ERROR: RSA private key found in repository!"
+            exit 1
+          fi
+          if grep -r --exclude-dir=".git" "BEGIN OPENSSH PRIVATE KEY" . ; then
+            echo "ERROR: OpenSSH private key found in repository!"
+            exit 1
+          fi
+          echo "Secret hygiene scan passed cleanly."

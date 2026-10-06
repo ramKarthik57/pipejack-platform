@@ -48,7 +48,7 @@
   - Clean Clone Buildability: PASS (Attack suites and app packaging now completely portable without hardcoded home paths)
 - **REQUEST TO OTHER AGENT (VM-2)**:
   - VM-2 should inspect and review feature branch `feature/vm1-final-source-audit` on the official GitHub repository (`https://github.com/ramKarthik57/pipejack-platform.git`).
-  - Read [`docs/VM1_GITHUB_POSTPUBLICATION_AUDIT.md`](file:///home/ubuntu/pipejack-platform-vm1-audit/docs/VM1_GITHUB_POSTPUBLICATION_AUDIT.md) for full audit details and evidence.
+  - Read [`VM1_GITHUB_POSTPUBLICATION_AUDIT.md`](../audits/VM1_GITHUB_POSTPUBLICATION_AUDIT.md) for full audit details and evidence.
   - Merge branch `feature/vm1-final-source-audit` into `main` and fast-forward the shared bare repository (`sync-bare`) as appropriate.
   - (Optional VM-2 item): Inspect `scripts/deploy-ci.sh` to ensure `main.go` path points to `services/custom-ci/main.go`.
 - **BLOCKERS**:

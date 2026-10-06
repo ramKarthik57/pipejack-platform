@@ -37,11 +37,11 @@ The chain is tamper-evident. Modifying any past attestation breaks verification 
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md).
+See [PIPEJACK_ARCHITECTURE.md](../../docs/architecture/PIPEJACK_ARCHITECTURE.md).
 
 ## Implementation status
 
-See [docs/implementation-status.md](docs/implementation-status.md).
+See [VALIDATION_REPORT.md](../../docs/testing/VALIDATION_REPORT.md).
 
 ## Build
 

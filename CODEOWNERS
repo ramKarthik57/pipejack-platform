@@ -1,14 +1,19 @@
-# PipeJack Code Ownership
+# PipeJack Code Ownership Specification
 
 # Global Maintainers
-*       @ramKarthik57
+*                       @ramKarthik57
 
-# Core Security Daemon & Sensors (VM-2 Owned)
+# CI & Governance
+/.github/               @ramKarthik57
+/docs/                  @ramKarthik57
+/scripts/               @ramKarthik57
+
+# Core Security Daemon & Sensors (VM-2)
 /core/pipejack/         @ramKarthik57
 /services/custom-ci/    @ramKarthik57
 /deployment/            @ramKarthik57
 
-# Applications & Security Fixtures (VM-1 Owned)
+# Applications & Security Fixtures (VM-1)
 /applications/          @ramKarthik57
 /security-fixtures/     @ramKarthik57
 /attacks/               @ramKarthik57

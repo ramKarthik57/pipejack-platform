@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 580" width="100%" height="100%" style="background:#0d1117; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="vm1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="vm2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accentCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="accentGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="accentRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f87171"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="accentPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f87171"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Title & Subtitle -->
+  <text x="550" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#f3f4f6" letter-spacing="0.5">PipeJack Two-VM Zero-Trust Architecture Topology</text>
+  <text x="550" y="60" text-anchor="middle" font-size="13" fill="#9ca3af">Host-Level Sidecar Isolation • Multi-Sensor Invariant Enforcement • Cryptographic Attestation</text>
+
+  <!-- VM-1 Container -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="90" width="310" height="450" rx="12" fill="url(#vm1Grad)" stroke="#374151" stroke-width="1.5"/>
+    <rect x="40" y="90" width="310" height="42" rx="12" fill="#1f2937"/>
+    <rect x="40" y="120" width="310" height="12" fill="#1f2937"/>
+    <circle cx="65" cy="111" r="6" fill="#ef4444"/>
+    <circle cx="82" cy="111" r="6" fill="#f59e0b"/>
+    <circle cx="99" cy="111" r="6" fill="#10b981"/>
+    <text x="125" y="116" font-size="14" font-weight="700" fill="#f3f4f6">VM-1 (192.168.88.132)</text>
+    <text x="125" y="129" font-size="10" fill="#9ca3af">Developer &amp; Adversary Environment</text>
+  </g>
+
+  <!-- VM-1 Content Blocks -->
+  <g transform="translate(60, 150)">
+    <!-- App Sources -->
+    <rect x="0" y="0" width="270" height="105" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="14" y="24" font-size="12" font-weight="700" fill="#38bdf8">📦 Production Applications</text>
+    <text x="14" y="46" font-size="11" fill="#cbd5e1">• Java 17 Banking API (Maven)</text>
+    <text x="14" y="64" font-size="11" fill="#cbd5e1">• Java 17 Calculator API (AST Engine)</text>
+    <text x="14" y="82" font-size="11" fill="#cbd5e1">• Node.js 18 Payment &amp; Python Analytics</text>
+
+    <!-- Attacks -->
+    <rect x="0" y="120" width="270" height="135" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="14" y="144" font-size="12" font-weight="700" fill="#f87171">⚡ Supply Chain &amp; Attack Fixtures</text>
+    <text x="14" y="166" font-size="11" fill="#fca5a5">• Scenario 01: Shell Binary Exec (/bin/sh)</text>
+    <text x="14" y="184" font-size="11" fill="#fca5a5">• Scenario 02: HTTP Curl Exfiltration</text>
+    <text x="14" y="202" font-size="11" fill="#fca5a5">• Scenario 03: Filesystem Merkle Tampering</text>
+    <text x="14" y="220" font-size="11" fill="#fca5a5">• Scenarios 04–07: Obfuscation, Droppers, Anomaly</text>
+    <text x="14" y="238" font-size="11" fill="#fca5a5">• Evil Pkg / Malicious Setup.py / Postinstall</text>
+
+    <!-- Upload Script -->
+    <rect x="0" y="270" width="270" height="90" rx="8" fill="#0f172a" stroke="#0ea5e9" stroke-dasharray="3 3"/>
+    <text x="14" y="294" font-size="12" font-weight="700" fill="#38bdf8">🚀 Upload &amp; Dispatcher</text>
+    <text x="14" y="316" font-size="11" fill="#e2e8f0">• pipejack-upload.sh (Multi-Image Payload)</text>
+    <text x="14" y="334" font-size="11" fill="#94a3b8">• attacks/run-all.sh Master Verification</text>
+  </g>
+
+  <!-- Network Traffic Arrow -->
+  <path d="M 350 320 L 415 320" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrowCyan)"/>
+  <rect x="345" y="280" width="80" height="30" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1"/>
+  <text x="385" y="295" text-anchor="middle" font-size="10" font-weight="700" fill="#38bdf8">HTTP POST</text>
+  <text x="385" y="306" text-anchor="middle" font-size="9" fill="#94a3b8">:8888/upload</text>
+
+  <!-- VM-2 Container -->
+  <g filter="url(#shadow)">
+    <rect x="430" y="90" width="630" height="450" rx="12" fill="url(#vm2Grad)" stroke="#334155" stroke-width="1.5"/>
+    <rect x="430" y="90" width="630" height="42" rx="12" fill="#1e293b"/>
+    <rect x="430" y="120" width="630" height="12" fill="#1e293b"/>
+    <circle cx="455" cy="111" r="6" fill="#ef4444"/>
+    <circle cx="472" cy="111" r="6" fill="#f59e0b"/>
+    <circle cx="489" cy="111" r="6" fill="#10b981"/>
+    <text x="515" y="116" font-size="14" font-weight="700" fill="#f3f4f6">VM-2 (192.168.88.133)</text>
+    <text x="515" y="129" font-size="10" fill="#9ca3af">PipeJack Security Engine, CI Pipeline &amp; Attestation Ledger</text>
+  </g>
+
+  <!-- VM-2 Components -->
+  <g transform="translate(450, 150)">
+    <!-- CI Orchestrator -->
+    <rect x="0" y="0" width="280" height="100" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1"/>
+    <text x="14" y="24" font-size="12" font-weight="700" fill="#38bdf8">⚙️ CI Orchestrator (pipejack-ci)</text>
+    <text x="14" y="44" font-size="11" fill="#cbd5e1">• Listen HTTP :8888 &amp; Extract Tarball</text>
+    <text x="14" y="62" font-size="11" fill="#cbd5e1">• Stack Auto-Detect (Maven / npm / pip)</text>
+    <text x="14" y="80" font-size="11" fill="#cbd5e1">• Launch Docker Container + cgroup v2</text>
+
+    <!-- Sidecar Multi-Sensor Daemon -->
+    <rect x="300" y="0" width="290" height="235" rx="8" fill="#0f172a" stroke="#c084fc" stroke-width="1.5"/>
+    <text x="314" y="24" font-size="12" font-weight="700" fill="#c084fc">🛡️ PipeJack Daemon (pipejackd Sidecar)</text>
+
+    <!-- Sensors inside daemon -->
+    <rect x="312" y="38" width="266" height="38" rx="6" fill="#1e293b"/>
+    <text x="322" y="54" font-size="11" font-weight="600" fill="#38bdf8">1. Process Tree Differ (proctree)</text>
+    <text x="322" y="68" font-size="9.5" fill="#94a3b8">150ms cgroup /proc polling vs strict allowlist</text>
+
+    <rect x="312" y="84" width="266" height="38" rx="6" fill="#1e293b"/>
+    <text x="322" y="100" font-size="11" font-weight="600" fill="#38bdf8">2. Merkle Filesystem Baseline (fschecker)</text>
+    <text x="322" y="114" font-size="9.5" fill="#94a3b8">Pre/post SHA-256 Merkle root workspace diff</text>
+
+    <rect x="312" y="130" width="266" height="38" rx="6" fill="#1e293b"/>
+    <text x="322" y="146" font-size="11" font-weight="600" fill="#38bdf8">3. Egress Firewall &amp; Netmon (egressfw)</text>
+    <text x="322" y="160" font-size="9.5" fill="#94a3b8">Netns iptables PIPEJACK_EGRESS + /proc/net</text>
+
+    <rect x="312" y="176" width="266" height="38" rx="6" fill="#1e293b"/>
+    <text x="322" y="192" font-size="11" font-weight="600" fill="#38bdf8">4. Statistical Anomaly Engine (anomaly)</text>
+    <text x="322" y="206" font-size="9.5" fill="#94a3b8">Z-score variance across 4 telemetry metrics</text>
+
+    <!-- Policy Decision Point (PDP) -->
+    <rect x="0" y="120" width="280" height="115" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+    <text x="14" y="144" font-size="12" font-weight="700" fill="#fbbf24">⚖️ Policy Decision Point (PDP)</text>
+    <text x="14" y="166" font-size="11" fill="#cbd5e1">• Match telemetry against YAML policy</text>
+    <text x="14" y="184" font-size="11" fill="#cbd5e1">• Zero tolerance for unauthorized binaries</text>
+    <text x="14" y="202" font-size="11" fill="#cbd5e1">• ALLOW (HTTP 200) or BLOCK (HTTP 403)</text>
+    <text x="14" y="220" font-size="11" fill="#94a3b8">• Quarantine enforcement for violations</text>
+
+    <!-- Paths: ALLOW vs BLOCK -->
+    <!-- ALLOW Path -->
+    <rect x="0" y="255" width="280" height="105" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <text x="14" y="278" font-size="12" font-weight="700" fill="#34d399">✅ ALLOW Path (Clean Build)</text>
+    <text x="14" y="298" font-size="10.5" fill="#a7f3d0">• Build image &amp; push to localhost:5000</text>
+    <text x="14" y="316" font-size="10.5" fill="#a7f3d0">• Deploy live production container</text>
+    <text x="14" y="334" font-size="10.5" fill="#a7f3d0">• Return HTTP 200 + Build Logs</text>
+
+    <!-- BLOCK Path -->
+    <rect x="300" y="255" width="290" height="105" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+    <text x="314" y="278" font-size="12" font-weight="700" fill="#f87171">⛔ BLOCK Path (Policy Violation)</text>
+    <text x="314" y="298" font-size="10.5" fill="#fca5a5">• Tag as &lt;tag&gt;-quarantine in registry</text>
+    <text x="314" y="316" font-size="10.5" fill="#fca5a5">• Immediate halt: deployment prohibited</text>
+    <text x="314" y="334" font-size="10.5" fill="#fca5a5">• Return HTTP 403 + Forensic Audit</text>
+
+    <!-- Attestation Ledger footer -->
+    <rect x="0" y="375" width="590" height="60" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1"/>
+    <text x="14" y="398" font-size="12" font-weight="700" fill="#a5b4fc">🔒 Cryptographic Attestation Ledger (Ed25519 + SHA-256 Chain)</text>
+    <text x="14" y="418" font-size="10.5" fill="#c7d2fe">• Immutable provenance record per build • prev_hash link • 100% cryptographically verified ledger</text>
+  </g>
+</svg>
