@@ -15,7 +15,7 @@ PipeJack enforces strict security and engineering invariants. All contributions 
 ### Prerequisites
 - Linux OS with cgroup v2 enabled
 - Docker Engine 24.0+
-- Go 1.22+ (Go 1.23 recommended)
+- Go 1.25+ (Go 1.25.0 verified)
 - `iptables` and `python3`
 
 ### Building the Project

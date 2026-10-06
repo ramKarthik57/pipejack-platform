@@ -1,0 +1,15 @@
+=== PIPEJACK SYSTEM HEALTH CHECK ===
+Tue Oct  6 04:32:02 PM UTC 2026
+● pipejack-ci.service - PipeJack CI Server
+     Loaded: loaded (/etc/systemd/system/pipejack-ci.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-10-06 20:58:16 IST; 1h 3min ago
+ Invocation: 8579b9e72b5448abb4c957d979f55068
+       Docs: https://github.com/ramKarthik57/pipejack-test
+   Main PID: 4892 (pipejack-ci)
+      Tasks: 7 (limit: 3963)
+     Memory: 10.8M (peak: 139.2M, swap: 2.6M, swap peak: 2.6M)
+        CPU: 1.175s
+     CGroup: /system.slice/pipejack-ci.service
+{"status":"ok","service":"pipejack-ci","timestamp":"2026-10-06T16:32:02Z"}
+NAMES      STATUS             PORTS
+registry   Up About an hour   0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp

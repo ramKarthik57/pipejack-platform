@@ -1,80 +1,80 @@
 package main
 
 import (
-	"gopkg.in/yaml.v3"
+	"archive/tar"
+	"compress/gzip"
 	"custom-ci/anomaly"
-    "archive/tar"
-    "compress/gzip"
-    "encoding/json"
-    "fmt"
-    "io"
-    "net/http"
-    "os"
-    "os/exec"
-    "path/filepath"
-    "strings"
-    "time"
+	"encoding/json"
+	"fmt"
+	"gopkg.in/yaml.v3"
+	"io"
+	"net/http"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 type BuildResult struct {
-    Status  string `json:"status"`
-    Log     string `json:"log"`
-    BuildID string `json:"build_id"`
-    Image   string `json:"image"`
+	Status  string `json:"status"`
+	Log     string `json:"log"`
+	BuildID string `json:"build_id"`
+	Image   string `json:"image"`
 }
 
 const (
-    reset   = "\033[0m"
-    bold    = "\033[1m"
-    red     = "\033[31m"
-    green   = "\033[32m"
-    yellow  = "\033[33m"
-    blue    = "\033[34m"
-    cyan    = "\033[36m"
-    magenta = "\033[35m"
+	reset   = "\033[0m"
+	bold    = "\033[1m"
+	red     = "\033[31m"
+	green   = "\033[32m"
+	yellow  = "\033[33m"
+	blue    = "\033[34m"
+	cyan    = "\033[36m"
+	magenta = "\033[35m"
 )
 
 func colorStatus(status string) string {
-    switch status {
-    case "CLEAN", "SUCCESS", "ALLOW":
-        return green + status + reset
-    case "VIOLATION DETECTED", "BLOCK", "FAIL":
-        return red + status + reset
-    case "DETECTION ONLY", "DISABLED":
-        return yellow + status + reset
-    default:
-        return status
-    }
+	switch status {
+	case "CLEAN", "SUCCESS", "ALLOW":
+		return green + status + reset
+	case "VIOLATION DETECTED", "BLOCK", "FAIL":
+		return red + status + reset
+	case "DETECTION ONLY", "DISABLED":
+		return yellow + status + reset
+	default:
+		return status
+	}
 }
 
 func main() {
-    os.MkdirAll("/home/ubuntu/code-repo", 0755)
-    http.HandleFunc("/upload", handleUpload)
+	os.MkdirAll("/home/ubuntu/code-repo", 0755)
+	http.HandleFunc("/upload", handleUpload)
 
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, `{"status":"ok","service":"pipejack-ci","timestamp":"%s"}`, time.Now().UTC().Format(time.RFC3339))
 	})
-    printBanner()
-    err := http.ListenAndServe(":8888", nil)
-    if err != nil {
-        fmt.Println("Server error:", err)
-    }
+	printBanner()
+	err := http.ListenAndServe(":8888", nil)
+	if err != nil {
+		fmt.Println("Server error:", err)
+	}
 }
 
 func printBanner() {
-    fmt.Println(cyan + "╔══════════════════════════════════════════════╗" + reset)
-    fmt.Printf("%s║   PIPEJACK UNIFIED CI/CD ENGINE  |  :8888    ║%s\n", cyan, reset)
-    fmt.Printf("%s║   Endpoint: POST /upload                     ║%s\n", cyan, reset)
-    fmt.Println(cyan + "╚══════════════════════════════════════════════╝" + reset)
+	fmt.Println(cyan + "╔══════════════════════════════════════════════╗" + reset)
+	fmt.Printf("%s║   PIPEJACK UNIFIED CI/CD ENGINE  |  :8888    ║%s\n", cyan, reset)
+	fmt.Printf("%s║   Endpoint: POST /upload                     ║%s\n", cyan, reset)
+	fmt.Println(cyan + "╚══════════════════════════════════════════════╝" + reset)
 }
 
 func printSection(title string) {
-    fmt.Println()
-    fmt.Println(cyan + "────────────────────────────────────────────────" + reset)
-    fmt.Printf("%s%s%s\n", bold+cyan, title, reset)
-    fmt.Println(cyan + "────────────────────────────────────────────────" + reset)
+	fmt.Println()
+	fmt.Println(cyan + "────────────────────────────────────────────────" + reset)
+	fmt.Printf("%s%s%s\n", bold+cyan, title, reset)
+	fmt.Println(cyan + "────────────────────────────────────────────────" + reset)
 }
 
 func extractProcessViolations(output string) []string {
@@ -94,15 +94,15 @@ func extractProcessViolations(output string) []string {
 }
 
 func extractFileChanges(output string) []string {
-    var changes []string
-    for _, line := range strings.Split(output, "\n") {
-        trimmed := strings.TrimSpace(line)
-        if strings.HasPrefix(trimmed, "[modified]") || strings.HasPrefix(trimmed, "[added]") ||
-           strings.HasPrefix(trimmed, "[deleted]") {
-            changes = append(changes, trimmed)
-        }
-    }
-    return changes
+	var changes []string
+	for _, line := range strings.Split(output, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "[modified]") || strings.HasPrefix(trimmed, "[added]") ||
+			strings.HasPrefix(trimmed, "[deleted]") {
+			changes = append(changes, trimmed)
+		}
+	}
+	return changes
 }
 
 func extractMerkleRoots(output string) (string, string) {
@@ -126,52 +126,52 @@ func extractMerkleRoots(output string) (string, string) {
 }
 
 func filterSpringBuild(out string) string {
-    keywords := []string{"Building", "Tests run:", "BUILD SUCCESS", "Total time"}
-    var lines []string
-    for _, line := range strings.Split(out, "\n") {
-        for _, kw := range keywords {
-            if strings.Contains(line, kw) {
-                lines = append(lines, line)
-                break
-            }
-        }
-    }
-    return strings.Join(lines, "\n")
+	keywords := []string{"Building", "Tests run:", "BUILD SUCCESS", "Total time"}
+	var lines []string
+	for _, line := range strings.Split(out, "\n") {
+		for _, kw := range keywords {
+			if strings.Contains(line, kw) {
+				lines = append(lines, line)
+				break
+			}
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
 func filterDockerOutput(out string) string {
-    var lines []string
-    for _, line := range strings.Split(out, "\n") {
-        trimmed := strings.TrimSpace(line)
-        if strings.Contains(trimmed, "naming to") || strings.Contains(trimmed, "digest:") ||
-           strings.Contains(trimmed, "ERROR") || strings.Contains(trimmed, "failed") {
-            lines = append(lines, line)
-        }
-    }
-    return strings.Join(lines, "\n")
+	var lines []string
+	for _, line := range strings.Split(out, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.Contains(trimmed, "naming to") || strings.Contains(trimmed, "digest:") ||
+			strings.Contains(trimmed, "ERROR") || strings.Contains(trimmed, "failed") {
+			lines = append(lines, line)
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost {
-        http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
-        return
-    }
+	if r.Method != http.MethodPost {
+		http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
-    handlerStart := time.Now()
-    buildID := fmt.Sprint(handlerStart.Unix())
-    startTime := handlerStart.Format("15:04:05")
-    logger := &strings.Builder{}
-    log := func(stage, msg string) {
-        line := fmt.Sprintf("%s[%s]%s %s\n", blue, stage, reset, msg)
-        logger.WriteString(line)
-        fmt.Print(line)
-    }
+	handlerStart := time.Now()
+	buildID := fmt.Sprint(handlerStart.Unix())
+	startTime := handlerStart.Format("15:04:05")
+	logger := &strings.Builder{}
+	log := func(stage, msg string) {
+		line := fmt.Sprintf("%s[%s]%s %s\n", blue, stage, reset, msg)
+		logger.WriteString(line)
+		fmt.Print(line)
+	}
 
-    printSection("Build Trigger")
-    log("INIT", "Build triggered – ID: "+buildID)
-    log("TIME", "Started at: "+startTime)
+	printSection("Build Trigger")
+	log("INIT", "Build triggered – ID: "+buildID)
+	log("TIME", "Started at: "+startTime)
 
-    uploadPath := fmt.Sprintf("/tmp/upload-%s.tar.gz", buildID)
+	uploadPath := fmt.Sprintf("/tmp/upload-%s.tar.gz", buildID)
 
 	if err := r.ParseMultipartForm(64 << 20); err != nil {
 		log("FAIL", "multipart parse error: "+err.Error())
@@ -202,197 +202,196 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 	defer os.Remove(uploadPath)
 	log("UPLOAD", fmt.Sprintf("Saved: %s", uploadPath))
 
-    workspace := fmt.Sprintf("/tmp/workspace-%s", buildID)
-    os.MkdirAll(workspace, 0755)
-    defer os.RemoveAll(workspace)
-    log("CHECKOUT", fmt.Sprintf("Workspace: %s", workspace))
+	workspace := fmt.Sprintf("/tmp/workspace-%s", buildID)
+	os.MkdirAll(workspace, 0755)
+	defer os.RemoveAll(workspace)
+	log("CHECKOUT", fmt.Sprintf("Workspace: %s", workspace))
 
-    if err := extractTarGz(uploadPath, workspace); err != nil {
-        log("FAIL", "extract error: "+err.Error())
-        w.WriteHeader(http.StatusInternalServerError)
-        return
-    }
+	if err := extractTarGz(uploadPath, workspace); err != nil {
+		log("FAIL", "extract error: "+err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
-    isSpring := false
-    isNode := false
-    isPython := false
-    if _, err := os.Stat(filepath.Join(workspace, "package.json")); err == nil {
-        isNode = true
-    }
-    if _, err := os.Stat(filepath.Join(workspace, "requirements.txt")); err == nil {
-        isPython = true
-    } else if _, err := os.Stat(filepath.Join(workspace, "pyproject.toml")); err == nil {
-        isPython = true
-    } else if _, err := os.Stat(filepath.Join(workspace, "setup.py")); err == nil {
-        isPython = true
-    }
-    if _, err := os.Stat(filepath.Join(workspace, "pom.xml")); err == nil {
-        isSpring = true
-    }
+	isSpring := false
+	isNode := false
+	isPython := false
+	if _, err := os.Stat(filepath.Join(workspace, "package.json")); err == nil {
+		isNode = true
+	}
+	if _, err := os.Stat(filepath.Join(workspace, "requirements.txt")); err == nil {
+		isPython = true
+	} else if _, err := os.Stat(filepath.Join(workspace, "pyproject.toml")); err == nil {
+		isPython = true
+	} else if _, err := os.Stat(filepath.Join(workspace, "setup.py")); err == nil {
+		isPython = true
+	}
+	if _, err := os.Stat(filepath.Join(workspace, "pom.xml")); err == nil {
+		isSpring = true
+	}
 
-    isBanking := false
-    if isSpring {
-        pomData, _ := os.ReadFile(filepath.Join(workspace, "pom.xml"))
-        if strings.Contains(string(pomData), "<artifactId>banking</artifactId>") {
-            isBanking = true
-        }
-    }
+	isBanking := false
+	if isSpring {
+		pomData, _ := os.ReadFile(filepath.Join(workspace, "pom.xml"))
+		if strings.Contains(string(pomData), "<artifactId>banking</artifactId>") {
+			isBanking = true
+		}
+	}
 
-    projectName := "Node.js Employee Manager"
-    if isSpring {
-        if isBanking {
-            projectName = "Banking API"
-        } else {
-            projectName = "Spring Boot Calculator"
-        }
-    } else if isNode {
-        projectName = "Node.js App"
-    } else if isPython {
-        projectName = "Python App"
-    }
-    log("CHECKOUT", "Source code extracted – "+projectName)
+	projectName := "Node.js Employee Manager"
+	if isSpring {
+		if isBanking {
+			projectName = "Banking API"
+		} else {
+			projectName = "Spring Boot Calculator"
+		}
+	} else if isNode {
+		projectName = "Node.js App"
+	} else if isPython {
+		projectName = "Python App"
+	}
+	log("CHECKOUT", "Source code extracted – "+projectName)
 
-    buildContainer := "build-" + buildID
-    containerImage := "node@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e"
-    if isSpring {
-        containerImage = "maven@sha256:40fcff4c4043d6adc90286c2e38ec70950f34f6dd5784f7e524866c66520cc23"
-    } else if isPython {
-        containerImage = "python@sha256:0687a6bc9716edc2a6ee0fbfb0f87e7ee358b262b67c9215de91bc9b2d38ba71"
-    }
-    exec.Command("docker", "run", "-d", "--name", buildContainer,
+	buildContainer := "build-" + buildID
+	containerImage := "node@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e"
+	if isSpring {
+		containerImage = "maven@sha256:40fcff4c4043d6adc90286c2e38ec70950f34f6dd5784f7e524866c66520cc23"
+	} else if isPython {
+		containerImage = "python@sha256:0687a6bc9716edc2a6ee0fbfb0f87e7ee358b262b67c9215de91bc9b2d38ba71"
+	}
+	exec.Command("docker", "run", "-d", "--name", buildContainer,
 		"-v", os.Getenv("HOME")+"/.m2:/root/.m2",
-        "-v", workspace+":/app", "-w", "/app",
-        containerImage, "sleep", "600").Run()
-    defer exec.Command("docker", "rm", "-f", buildContainer).Run()
+		"-v", workspace+":/app", "-w", "/app",
+		containerImage, "sleep", "600").Run()
+	defer exec.Command("docker", "rm", "-f", buildContainer).Run()
 
-    cgroupPath := findCgroup(buildContainer)
-    log("CGROUP", cgroupPath)
+	cgroupPath := findCgroup(buildContainer)
+	log("CGROUP", cgroupPath)
 
-    policyHostPath := "/home/ubuntu/pipejack-docker/policy.yaml"
-    dockerfileHostPath := "/home/ubuntu/custom-ci-node/Dockerfile.node"
-    if isSpring {
-        dockerfileHostPath = "/home/ubuntu/custom-ci/Dockerfile.spring"
-        if isBanking {
-            policyHostPath = "/home/ubuntu/custom-ci/policy-banking.yaml"
-        } else {
-            policyHostPath = "/home/ubuntu/custom-ci/policy-spring.yaml"
-        }
-    } else if isNode {
-        policyHostPath = "/home/ubuntu/custom-ci/policy-node.yaml"
-    } else if isPython {
-        policyHostPath = "/home/ubuntu/custom-ci/policy-python.yaml"
-        dockerfileHostPath = "/home/ubuntu/custom-ci/Dockerfile.python"
-    }
+	policyHostPath := "/home/ubuntu/pipejack-docker/policy.yaml"
+	dockerfileHostPath := "/home/ubuntu/custom-ci-node/Dockerfile.node"
+	if isSpring {
+		dockerfileHostPath = "/home/ubuntu/custom-ci/Dockerfile.spring"
+		if isBanking {
+			policyHostPath = "/home/ubuntu/custom-ci/policy-banking.yaml"
+		} else {
+			policyHostPath = "/home/ubuntu/custom-ci/policy-spring.yaml"
+		}
+	} else if isNode {
+		policyHostPath = "/home/ubuntu/custom-ci/policy-node.yaml"
+	} else if isPython {
+		policyHostPath = "/home/ubuntu/custom-ci/policy-python.yaml"
+		dockerfileHostPath = "/home/ubuntu/custom-ci/Dockerfile.python"
+	}
 
-    sidecarName := "sidecar-" + buildID
-    sidecarCmd := exec.Command("docker", "run", "--rm", "--name", sidecarName,
-        "--pid=container:"+buildContainer,
-        "--network=container:"+buildContainer,
-        "--privileged",
-        "-v", "/sys/fs/cgroup:/sys/fs/cgroup:rw",
-        "-v", "/sys/fs/bpf:/sys/fs/bpf:rw",
-        "-v", workspace+":/workspace:ro",
-        "-v", policyHostPath+":/app/policy.yaml",
-        "pipejack-daemon",
-        "/workspace", "/app/policy.yaml", cgroupPath)
-    var sidecarLog strings.Builder
-    sidecarCmd.Stdout = &sidecarLog
-    sidecarCmd.Stderr = &sidecarLog
-    sidecarCmd.Start()
-    log("SIDECAR", "PipeJack sidecar started (detection mode)")
+	sidecarName := "sidecar-" + buildID
+	sidecarCmd := exec.Command("docker", "run", "--rm", "--name", sidecarName,
+		"--pid=container:"+buildContainer,
+		"--network=container:"+buildContainer,
+		"--privileged",
+		"-v", "/sys/fs/cgroup:/sys/fs/cgroup:rw",
+		"-v", "/sys/fs/bpf:/sys/fs/bpf:rw",
+		"-v", workspace+":/workspace:ro",
+		"-v", policyHostPath+":/app/policy.yaml",
+		"pipejack-daemon",
+		"/workspace", "/app/policy.yaml", cgroupPath)
+	var sidecarLog strings.Builder
+	sidecarCmd.Stdout = &sidecarLog
+	sidecarCmd.Stderr = &sidecarLog
+	sidecarCmd.Start()
+	log("SIDECAR", "PipeJack sidecar started (detection mode)")
 
 	if os.Getenv("PIPEJACK_DEV") == "1" {
 		log("DEV", "waiting 2500ms for sidecar pre-snapshot to complete")
 		time.Sleep(2500 * time.Millisecond)
 	}
 
-    execInContainer := func(args ...string) (string, error) {
-        cmdArgs := append([]string{"exec", "-w", "/app", buildContainer}, args...)
-        cmd := exec.Command("docker", cmdArgs...)
-        out, err := cmd.CombinedOutput()
-        return string(out), err
-    }
+	execInContainer := func(args ...string) (string, error) {
+		cmdArgs := append([]string{"exec", "-w", "/app", buildContainer}, args...)
+		cmd := exec.Command("docker", cmdArgs...)
+		out, err := cmd.CombinedOutput()
+		return string(out), err
+	}
 
-    printSection("Build & Test")
-    if os.Getenv("PIPEJACK_DEV") == "1" {
-        log("DEV", "skipping Maven, running attack.sh directly")
-        ashPath := filepath.Join(workspace, "attack.sh")
-        log("DEV-STAT", "workspace="+workspace)
-        log("DEV-STAT", "attack.sh path="+ashPath)
+	printSection("Build & Test")
+	if os.Getenv("PIPEJACK_DEV") == "1" {
+		log("DEV", "skipping Maven, running attack.sh directly")
+		ashPath := filepath.Join(workspace, "attack.sh")
+		log("DEV-STAT", "workspace="+workspace)
+		log("DEV-STAT", "attack.sh path="+ashPath)
 
-        acc := filepath.Join(workspace, "src/main/java/com/pipejack/banking/controller/AccountController.java")
-        if st, err := os.Stat(acc); err == nil {
-            log("DEV-PRE", fmt.Sprintf("size=%d mtime=%s", st.Size(), st.ModTime().Format("15:04:05.000")))
-        } else {
-            log("DEV-PRE", "stat err: "+err.Error())
-        }
+		acc := filepath.Join(workspace, "src/main/java/com/pipejack/banking/controller/AccountController.java")
+		if st, err := os.Stat(acc); err == nil {
+			log("DEV-PRE", fmt.Sprintf("size=%d mtime=%s", st.Size(), st.ModTime().Format("15:04:05.000")))
+		} else {
+			log("DEV-PRE", "stat err: "+err.Error())
+		}
 
-        if _, err := os.Stat(ashPath); err == nil {
-            log("DEV", "attack.sh found, executing")
-            out, err := execInContainer("sh", "attack.sh")
-            log("DEV-EXEC", fmt.Sprintf("err=%v", err))
-            log("DEV-OUT", fmt.Sprintf("output_len=%d", len(out)))
-            fmt.Println(out)
-        } else if _, err := os.Stat(filepath.Join(workspace, "malicious.sh")); err == nil {
-            log("DEV", "malicious.sh found, executing")
-            out, err := execInContainer("sh", "malicious.sh")
-            log("DEV-EXEC", fmt.Sprintf("err=%v", err))
-            log("DEV-OUT", fmt.Sprintf("output_len=%d", len(out)))
-            fmt.Println(out)
-        } else {
-            log("DEV", "no attack.sh or malicious.sh in workspace")
-        }
+		if _, err := os.Stat(ashPath); err == nil {
+			log("DEV", "attack.sh found, executing")
+			out, err := execInContainer("sh", "attack.sh")
+			log("DEV-EXEC", fmt.Sprintf("err=%v", err))
+			log("DEV-OUT", fmt.Sprintf("output_len=%d", len(out)))
+			fmt.Println(out)
+		} else if _, err := os.Stat(filepath.Join(workspace, "malicious.sh")); err == nil {
+			log("DEV", "malicious.sh found, executing")
+			out, err := execInContainer("sh", "malicious.sh")
+			log("DEV-EXEC", fmt.Sprintf("err=%v", err))
+			log("DEV-OUT", fmt.Sprintf("output_len=%d", len(out)))
+			fmt.Println(out)
+		} else {
+			log("DEV", "no attack.sh or malicious.sh in workspace")
+		}
 
-        if st, err := os.Stat(acc); err == nil {
-            log("DEV-POST", fmt.Sprintf("size=%d mtime=%s", st.Size(), st.ModTime().Format("15:04:05.000")))
-        } else {
-            log("DEV-POST", "stat err: "+err.Error())
-        }
-    } else if isSpring {
-        log("BUILD", "Running Maven clean package...")
-        out, _ := execInContainer("mvn", "clean", "package")
-        fmt.Println(filterSpringBuild(out))
-    } else if isPython {
-        log("BUILD", "Running pip install...")
-        var out string
-        if _, err := os.Stat(filepath.Join(workspace, "setup.py")); err == nil {
-            log("BUILD", "setup.py found, installing local package (pip install .)")
-            out, _ = execInContainer("pip", "install", "--no-cache-dir", ".")
-        } else {
-            out, _ = execInContainer("pip", "install", "--no-cache-dir", "-r", "requirements.txt")
-        }
-        fmt.Println(out)
-    } else {
-        log("BUILD", "Running npm install...")
-        out, _ := execInContainer("npm", "install")
-        for _, line := range strings.Split(out, "\n") {
-            if strings.Contains(line, "added") || strings.Contains(line, "audited") ||
-               strings.Contains(line, "vulnerabilities") {
-                fmt.Println(line)
-            }
-        }
-        log("BUILD", "Running npm run build...")
-        out, _ = execInContainer("npm", "run", "build")
-        fmt.Println(out)
-        log("TEST", "Running npm test...")
-        out, _ = execInContainer("npm", "test")
-        fmt.Println(out)
-    }
+		if st, err := os.Stat(acc); err == nil {
+			log("DEV-POST", fmt.Sprintf("size=%d mtime=%s", st.Size(), st.ModTime().Format("15:04:05.000")))
+		} else {
+			log("DEV-POST", "stat err: "+err.Error())
+		}
+	} else if isSpring {
+		log("BUILD", "Running Maven clean package...")
+		out, _ := execInContainer("mvn", "clean", "package")
+		fmt.Println(filterSpringBuild(out))
+	} else if isPython {
+		log("BUILD", "Running pip install...")
+		var out string
+		if _, err := os.Stat(filepath.Join(workspace, "setup.py")); err == nil {
+			log("BUILD", "setup.py found, installing local package (pip install .)")
+			out, _ = execInContainer("pip", "install", "--no-cache-dir", ".")
+		} else {
+			out, _ = execInContainer("pip", "install", "--no-cache-dir", "-r", "requirements.txt")
+		}
+		fmt.Println(out)
+	} else {
+		log("BUILD", "Running npm install...")
+		out, _ := execInContainer("npm", "install")
+		for _, line := range strings.Split(out, "\n") {
+			if strings.Contains(line, "added") || strings.Contains(line, "audited") ||
+				strings.Contains(line, "vulnerabilities") {
+				fmt.Println(line)
+			}
+		}
+		log("BUILD", "Running npm run build...")
+		out, _ = execInContainer("npm", "run", "build")
+		fmt.Println(out)
+		log("TEST", "Running npm test...")
+		out, _ = execInContainer("npm", "test")
+		fmt.Println(out)
+	}
 
-    if os.Getenv("PIPEJACK_DEV") == "1" {
+	if os.Getenv("PIPEJACK_DEV") == "1" {
 		log("DEV", "waiting 1500ms for sidecar init before SIGTERM")
 		time.Sleep(1500 * time.Millisecond)
 	}
 
 	exec.Command("docker", "kill", "--signal=SIGTERM", sidecarName).Run()
-    sidecarCmd.Wait()
-    sidecarOutput := sidecarLog.String()
+	sidecarCmd.Wait()
+	sidecarOutput := sidecarLog.String()
 	_ = os.WriteFile("/tmp/sidecar-diag-"+buildID+".log", []byte(sidecarOutput), 0644)
 	log("SIDECAR-DIAG", "dumped to /tmp/sidecar-diag-"+buildID+".log")
 
-
-    processViolations := extractProcessViolations(sidecarOutput)
-		// Fail-closed: if the sidecar did not produce a valid detection summary,
+	processViolations := extractProcessViolations(sidecarOutput)
+	// Fail-closed: if the sidecar did not produce a valid detection summary,
 	// treat it as a failure and block the build.
 	sidecarHealthy := strings.Contains(sidecarOutput, "PIPEJACK DETECTION SUMMARY") ||
 		strings.Contains(sidecarOutput, "POLICY DECISION")
@@ -406,44 +405,44 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 		log("SIDECAR-FAIL", reason)
 	}
 
-networkViolations := extractNetworkViolations(sidecarOutput)
+	networkViolations := extractNetworkViolations(sidecarOutput)
 	buildBinaries := extractPIPEJACKBinaries(sidecarOutput)
 	egressLines := extractEgressLines(sidecarOutput)
 	for _, el := range egressLines {
 		log("EGRESS-LINES", el)
 	}
-    fileChanges := extractFileChanges(sidecarOutput)
-    preMerkle, postMerkle := extractMerkleRoots(sidecarOutput)
-    processStatus := "CLEAN"
-    if len(processViolations) > 0 {
-        processStatus = "VIOLATION DETECTED"
-    }
-    fileStatus := "CLEAN"
-    if len(fileChanges) > 0 {
-        fileStatus = "VIOLATION DETECTED"
-    }
+	fileChanges := extractFileChanges(sidecarOutput)
+	preMerkle, postMerkle := extractMerkleRoots(sidecarOutput)
+	processStatus := "CLEAN"
+	if len(processViolations) > 0 {
+		processStatus = "VIOLATION DETECTED"
+	}
+	fileStatus := "CLEAN"
+	if len(fileChanges) > 0 {
+		fileStatus = "VIOLATION DETECTED"
+	}
 
-    printSection("PipeJack Security Scan")
-    fmt.Println("  🔍 Process Tree Differ")
-    fmt.Printf("     Status: %s\n", colorStatus(processStatus))
-    if processStatus == "VIOLATION DETECTED" {
-        fmt.Printf("     Suspicious Processes Detected: %d\n", len(processViolations))
-        for _, v := range processViolations {
-            fmt.Printf("       • %s\n", v)
-        }
-    }
-    fmt.Println()
-    fmt.Println("  📁 Filesystem Baseline Checker")
-    fmt.Printf("     Status: %s\n", colorStatus(fileStatus))
-    fmt.Printf("     Pre‑build Merkle Root:  %s\n", preMerkle)
-    fmt.Printf("     Post‑build Merkle Root: %s\n", postMerkle)
-    if fileStatus == "VIOLATION DETECTED" {
-        fmt.Printf("     Changed Files:\n")
-        for _, ch := range fileChanges {
-            fmt.Printf("       • %s\n", ch)
-        }
-    }
-    fmt.Println()
+	printSection("PipeJack Security Scan")
+	fmt.Println("  🔍 Process Tree Differ")
+	fmt.Printf("     Status: %s\n", colorStatus(processStatus))
+	if processStatus == "VIOLATION DETECTED" {
+		fmt.Printf("     Suspicious Processes Detected: %d\n", len(processViolations))
+		for _, v := range processViolations {
+			fmt.Printf("       • %s\n", v)
+		}
+	}
+	fmt.Println()
+	fmt.Println("  📁 Filesystem Baseline Checker")
+	fmt.Printf("     Status: %s\n", colorStatus(fileStatus))
+	fmt.Printf("     Pre‑build Merkle Root:  %s\n", preMerkle)
+	fmt.Printf("     Post‑build Merkle Root: %s\n", postMerkle)
+	if fileStatus == "VIOLATION DETECTED" {
+		fmt.Printf("     Changed Files:\n")
+		for _, ch := range fileChanges {
+			fmt.Printf("       • %s\n", ch)
+		}
+	}
+	fmt.Println()
 
 	verdict := "ALLOW"
 	if strings.Contains(sidecarOutput, "Decision: BLOCK") {
@@ -754,28 +753,32 @@ func extractTarGz(src, dst string) error {
 }
 
 func copyFile(src, dst string) {
-    in, _ := os.Open(src)
-    defer in.Close()
-    out, _ := os.Create(dst)
-    defer out.Close()
-    io.Copy(out, in)
+	in, _ := os.Open(src)
+	defer in.Close()
+	out, _ := os.Create(dst)
+	defer out.Close()
+	io.Copy(out, in)
 }
 
 func findCgroup(containerName string) string {
-    idBytes, _ := exec.Command("docker", "inspect", "-f", "{{.Id}}", containerName).Output()
-    id := strings.TrimSpace(string(idBytes))
-    if id == "" { return "/sys/fs/cgroup/pipejack" }
-    path, _ := exec.Command("sh", "-c",
-        `find /sys/fs/cgroup -name "docker-`+id+`*.scope" -type d 2>/dev/null | head -1`).Output()
-    cgPath := strings.TrimSpace(string(path))
-    if cgPath == "" { cgPath = "/sys/fs/cgroup/pipejack" }
-    return cgPath
+	idBytes, _ := exec.Command("docker", "inspect", "-f", "{{.Id}}", containerName).Output()
+	id := strings.TrimSpace(string(idBytes))
+	if id == "" {
+		return "/sys/fs/cgroup/pipejack"
+	}
+	path, _ := exec.Command("sh", "-c",
+		`find /sys/fs/cgroup -name "docker-`+id+`*.scope" -type d 2>/dev/null | head -1`).Output()
+	cgPath := strings.TrimSpace(string(path))
+	if cgPath == "" {
+		cgPath = "/sys/fs/cgroup/pipejack"
+	}
+	return cgPath
 }
 
 var execHost = func(name string, args ...string) (string, error) {
-    cmd := exec.Command(name, args...)
-    out, err := cmd.CombinedOutput()
-    return string(out), err
+	cmd := exec.Command(name, args...)
+	out, err := cmd.CombinedOutput()
+	return string(out), err
 }
 
 func policyQuarantine(policyPath string) bool {

@@ -4,6 +4,12 @@ Welcome to the technical documentation repository for the PipeJack Zero-Trust CI
 
 ---
 
+## Master Status & Research
+- **[Authoritative Current Status](CURRENT_STATUS.md)**: The single definitive source of truth for release baseline, active sensors, toolchains, and verified claims.
+- **[Research Contribution & Design Framing](research/CONTRIBUTION.md)**: Academic framing of the build-time blind spot, threat model, multi-sensor strategy, and experimental results.
+
+---
+
 ## Documentation Taxonomy
 
 ### 1. Architecture & Design
@@ -19,6 +25,7 @@ Welcome to the technical documentation repository for the PipeJack Zero-Trust CI
 ### 3. Testing & Adversarial Validation
 - **[Attack Scenarios & Adversarial Matrix](testing/ATTACK_SCENARIOS.md)**: Comprehensive breakdown of Scenarios 01 through 07, payload details, sensor responses, and quarantine actions.
 - **[Authoritative Validation Report](testing/VALIDATION_REPORT.md)**: Complete verification results for 52 unit tests, multi-stack builds, attack suite runs, and 282+ attestation records.
+- **[Sanitized Evidence Pack](testing/evidence/)**: Verifiable forensic build outputs, attestation audit tail, and system health checks.
 
 ### 4. Operations & Runbooks
 - **[Quick Start & Reproduction Guide](operations/QUICK_START.md)**: Reproducible single-machine setup and dual-VM production configuration guide.

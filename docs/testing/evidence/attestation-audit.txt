@@ -1,0 +1,25 @@
+   self_hash match: true
+   signature valid: true
+   chain link:      true
+✅ 1791221047.json  verdict=BLOCK
+   self_hash match: true
+   signature valid: true
+   chain link:      true
+✅ 1791221131.json  verdict=BLOCK
+   self_hash match: true
+   signature valid: true
+   chain link:      true
+✅ 1791221219.json  verdict=BLOCK
+   self_hash match: true
+   signature valid: true
+   chain link:      true
+✅ 1791221321.json  verdict=ALLOW
+   self_hash match: true
+   signature valid: true
+   chain link:      true
+✅ 1791301021.json  verdict=ALLOW
+   self_hash match: true
+   signature valid: true
+   chain link:      true
+
+✅ CHAIN INTACT

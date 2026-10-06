@@ -9,7 +9,7 @@ This guide enables evaluators and developers to run PipeJack and verify its zero
 - **Operating System**: Linux (Ubuntu 22.04 LTS or 24.04 LTS recommended, x86_64)
 - **Linux Control Groups**: cgroup v2 enabled (default on modern Linux)
 - **Docker Engine**: Docker 24.0+ (Docker 28+ tested)
-- **Go**: Go 1.22+ (Go 1.23.2 tested)
+- **Go**: Go 1.25+ (Go 1.25.0 verified)
 - **Utilities**: `iptables`, `curl`, `tar`, `python3`
 
 ---

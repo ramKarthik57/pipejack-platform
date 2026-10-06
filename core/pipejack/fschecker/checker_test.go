@@ -187,7 +187,7 @@ func TestCompareSnapshots_AddedFile(t *testing.T) {
 
 func TestCompareSnapshots_DeletedFile(t *testing.T) {
 	pre := map[string]string{
-		"AccountService.java": "orig_hash",
+		"AccountService.java":    "orig_hash",
 		"AccountController.java": "ctrl_hash",
 	}
 	post := map[string]string{

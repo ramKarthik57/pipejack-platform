@@ -7,12 +7,12 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	"time"
 	"syscall"
+	"time"
 
 	"github.com/ramKarthik57/pipejack-test/pipejack/fschecker"
-	"github.com/ramKarthik57/pipejack-test/pipejack/internal/netmon"
 	"github.com/ramKarthik57/pipejack-test/pipejack/internal/egressfw"
+	"github.com/ramKarthik57/pipejack-test/pipejack/internal/netmon"
 	"github.com/ramKarthik57/pipejack-test/pipejack/internal/pdp"
 	"github.com/ramKarthik57/pipejack-test/pipejack/proctree"
 )
@@ -147,8 +147,6 @@ func main() {
 	} else {
 		fmt.Println("Egress firewall cleaned up")
 	}
-
-
 
 	// Post-build filesystem snapshot
 	postRoot, postFiles, err := fschecker.BuildMerkleTree(workspace, ignore)

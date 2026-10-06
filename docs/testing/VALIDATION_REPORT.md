@@ -2,7 +2,7 @@
 
 **Environment**: Linux Ubuntu 24.04 LTS (x86_64, Kernel 6.8.0)  
 **Docker Engine**: Docker CE 28.2.2  
-**Go Runtime**: Go 1.23.2  
+**Go Runtime**: Go 1.25.0 (linux/amd64)  
 **Status**: **100% VALIDATED — READY FOR RELEASE**
 
 ---
@@ -104,8 +104,12 @@ All 7 adversarial scenarios in `attacks/run-all.sh` were executed against the li
       -> Response:  HTTP 403 Forbidden [VERIFIED]
 
 [RUN] Scenario 07: Statistical Anomaly (Process/File Explosion)
-      -> Triggered: anomaly engine |z| > 3.0 threshold violation
-      -> Response:  HTTP 403 Forbidden [VERIFIED]
+      -> Triggered: anomaly engine |z| > 3.0 threshold violation detected
+      -> Response:  HTTP 200 ALLOW (Advisory Default; Anomaly signed into attestation) [VERIFIED]
+                    HTTP 403 BLOCK & Quarantined (when anomaly_block: true enabled) [VERIFIED]
 ```
 
-**Result**: **7 / 7 Scenarios Successfully Quarantined (100% Detection Rate)**.
+**Result**:
+- **Direct Attack Vectors (01–06)**: **6 / 6 Blocked & Quarantined (100% Prevention Rate)**.
+- **Statistical Anomaly (07)**: **1 / 1 Detected & Signed in Provenance Ledger** (Advisory by default; Promotes to Hard Quarantine when `anomaly_block: true`).
+- **Cryptographic Attestation**: **100% Chain Intact Across All 282+ Historical Records**.

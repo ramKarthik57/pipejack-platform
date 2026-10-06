@@ -1,0 +1,19 @@
+=== PIPEJACK AUDIT EVIDENCE: CLEAN JAVA BUILD ===
+Build ID:       1791301021
+Timestamp:      2026-10-06T15:37:05Z
+Project:        Banking API
+Pre-Merkle:     b860f139085c00f98682eeb86842d395ac3ba12dd32bc650c73ac365130ff5b6
+Post-Merkle:    b860f139085c00f98682eeb86842d395ac3ba12dd32bc650c73ac365130ff5b6
+
+--- SENSOR OBSERVATIONS ---
+Process Tree:   CLEAN (Zero unauthorized binaries)
+Filesystem:     CLEAN (Mutations restricted to target/**)
+Network Egress: CLEAN (Zero unauthorized connections)
+Anomaly Engine: CLEAN (Within baseline distribution)
+
+--- DECISION & ATTESTATION ---
+Policy Verdict: ALLOW (HTTP 200 OK)
+Action:         Image pushed to localhost:5000/banking-api:1791301021, container deployed
+Chain Prev Hash:3070c541e085aaad1252812f2e099bea009bf3941329cca928940d41db844334
+Self Hash:      caea9453ad12c3b1b3b8631dde5cad198b8cacc74d81c361828760be201955e9
+Ed25519 Sig:    630436a45bc698a8f5a681d44db06914582bd4e5655b3e3e8831bcb3d6451f55... (Verified)

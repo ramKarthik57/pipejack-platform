@@ -1,0 +1,18 @@
+=== PIPEJACK AUDIT EVIDENCE: MALICIOUS JAVA BUILD ===
+Build ID:       1791221219
+Timestamp:      2026-10-05T17:27:12Z
+Project:        Banking API
+Pre-Merkle:     fb41c027f122504590122411669b0ce68e820b50e24dce5cbeb076265537c808
+Post-Merkle:    fb41c027f122504590122411669b0ce68e820b50e24dce5cbeb076265537c808
+
+--- SENSOR OBSERVATIONS ---
+Process Tree:   VIOLATION: unauthorized binary /usr/bin/curl
+Network Egress: NETWORK VIOLATION: PID 86 (/usr/bin/curl) -> 10.255.255.1:8080/tcp UNAUTHORIZED_EGRESS
+Anomaly Engine: binary [high] new binary not in baseline: /usr/bin/curl
+
+--- DECISION & ATTESTATION ---
+Policy Verdict: BLOCK (HTTP 403 Forbidden)
+Action:         Tagged as localhost:5000/banking-api:1791221219-quarantine; deployment aborted
+Chain Prev Hash:0cf228b3f112beed10c7ca439b33dd37ad053202c5e27a44e89700aa57715207
+Self Hash:      13297dc2c76c74803005272644192664e562f3ac447ce4ac6955b3956f68f34f
+Ed25519 Sig:    fbb24080bfdb7f05d5beeffe4c681d9bacf6b9d1c22c7b87d33f10421df72b66... (Verified)

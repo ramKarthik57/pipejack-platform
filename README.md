@@ -4,8 +4,9 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Security Policy](https://img.shields.io/badge/Security-Enforced-success.svg)](SECURITY.md)
 [![Attestation Ledger](https://img.shields.io/badge/Attestation-Ed25519_Verified_(282+_Builds)-blueviolet.svg)](docs/testing/VALIDATION_REPORT.md)
-[![Validation Status](https://img.shields.io/badge/Tests-52%2F52_Passing_(100%25)-brightgreen.svg)](docs/testing/VALIDATION_REPORT.md)
-[![Go Version](https://img.shields.io/badge/Go-1.23-00ADD8.svg?logo=go)](go.mod)
+[![Go Version](https://img.shields.io/badge/Go-1.25-00ADD8.svg?logo=go)](core/pipejack/go.mod)
+[![Status](https://img.shields.io/badge/Release_Status-CURRENT__TRUTH-brightgreen.svg)](docs/CURRENT_STATUS.md)
+[![Research](https://img.shields.io/badge/Research-CONTRIBUTION-blue.svg)](docs/research/CONTRIBUTION.md)
 
 **PipeJack** is an autonomous, host-assisted, multi-sensor zero-trust security platform engineered to protect containerized Continuous Integration and Continuous Delivery (CI/CD) pipelines from software supply chain attacks, build-time code injection, rogue process execution, and covert data exfiltration.
 
@@ -216,7 +217,7 @@ PipeJack includes a comprehensive adversarial testbed (`attacks/`) replicating r
 | **04** | Obfuscated Shell | `echo <base64> \| sh` | `proctree` | **BLOCK (403)** | Kernel `/proc/<pid>/exe` intercepted |
 | **05** | Multi-Stage Dropper | Staged binary in `/tmp/dropper` | `fschecker` + `proctree` | **BLOCK (403)** | Staged execution blocked, quarantined |
 | **06** | Trickling Exfiltration| Low-rate raw socket transmission | `egressfw` + `netmon` | **BLOCK (403)** | Netns SYN packet dropped |
-| **07** | Statistical Anomaly | Process explosion & rapid file generation | `anomaly` + `proctree` | **BLOCK (403)** | \(|z| > 3.0\) threshold violation, quarantined |
+| **07** | Statistical Anomaly | Process explosion & rapid file deviation | `anomaly` | **ALLOW (Advisory)** / **BLOCK** | Anomaly signed in attestation; quarantined when `anomaly_block: true` |
 
 *Detailed scenario specifications are documented in [docs/testing/ATTACK_SCENARIOS.md](docs/testing/ATTACK_SCENARIOS.md).*
 
@@ -233,7 +234,7 @@ Detailed in [docs/testing/VALIDATION_REPORT.md](docs/testing/VALIDATION_REPORT.m
 - **Cryptographic Attestation Audit**: **282 / 282 Records Verified (100%)**
   - Zero broken chain links, zero signature verification errors.
 - **Multi-Stack Live Builds**: Clean and malicious builds validated across Java 17, Spring, Node.js 18, and Python 3.12.
-- **Adversarial Suite**: 7 / 7 scenarios blocked and quarantined with HTTP 403 Forbidden.
+- **Adversarial Suite**: Scenarios 01–06 blocked & quarantined (HTTP 403 Forbidden, 100% prevention); Scenario 07 detected in telemetry & recorded in signed attestation (Advisory default; BLOCK when `anomaly_block: true`).
 
 ---
 

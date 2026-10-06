@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 	"time"
-        "unsafe"
+	"unsafe"
 )
 
 // WatchProcDir monitors /proc for new PIDs (inotify) and sends them to the channel.

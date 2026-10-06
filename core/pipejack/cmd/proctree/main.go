@@ -11,12 +11,12 @@ import (
 )
 
 type Policy struct {
-	Version               string            `yaml:"version"`
-	Pipeline              string            `yaml:"pipeline"`
-	AllowedBinaries       []string          `yaml:"allowed_binaries"`
-	BlockedBinaries       []string          `yaml:"blocked_binaries"`
-	SeverityThresholds    map[string]int    `yaml:"severity_thresholds"`
-	ActionsOnViolation    map[string]bool   `yaml:"actions_on_violation"`
+	Version            string          `yaml:"version"`
+	Pipeline           string          `yaml:"pipeline"`
+	AllowedBinaries    []string        `yaml:"allowed_binaries"`
+	BlockedBinaries    []string        `yaml:"blocked_binaries"`
+	SeverityThresholds map[string]int  `yaml:"severity_thresholds"`
+	ActionsOnViolation map[string]bool `yaml:"actions_on_violation"`
 }
 
 func main() {

@@ -2,9 +2,9 @@ package pdp
 
 import (
 	"fmt"
-	"strings"
-	"path"
 	"os"
+	"path"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -92,6 +92,7 @@ func Evaluate(policyPath string, processViolations, fsViolations, networkViolati
 //   - "exact/path.txt"          literal match
 //   - "dir/**"                  matches anything under dir/ (recursively)
 //   - "*.ext" or "prefix*"      glob match on the basename
+//
 // Wildcards only work in the basename segment or in the /** prefix.
 func matchPattern(pattern, filePath string) bool {
 	if pattern == filePath {

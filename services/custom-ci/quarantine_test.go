@@ -48,11 +48,11 @@ func TestQuarantine_BlockedWithQuarantineSuccess(t *testing.T) {
 	}
 
 	var resp struct {
-		Status   string `json:"status"`
-		BuildID  string `json:"build_id"`
-		Verdict  string `json:"verdict"`
-		Tag      string `json:"tag"`
-		Error    string `json:"error"`
+		Status  string `json:"status"`
+		BuildID string `json:"build_id"`
+		Verdict string `json:"verdict"`
+		Tag     string `json:"tag"`
+		Error   string `json:"error"`
 	}
 	if err := json.Unmarshal(rec.Body.Bytes(), &resp); err != nil {
 		t.Fatalf("invalid JSON response: %v\nBody: %s", err, rec.Body.String())

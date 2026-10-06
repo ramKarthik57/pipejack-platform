@@ -32,17 +32,21 @@ func main() {
 	dir := "/home/ubuntu/pipejack-attestations"
 	pubHex, err := os.ReadFile("/home/ubuntu/.pipejack/attest-key.pub")
 	if err != nil {
-		fmt.Println("cannot read pubkey:", err); os.Exit(1)
+		fmt.Println("cannot read pubkey:", err)
+		os.Exit(1)
 	}
 	pub, _ := hex.DecodeString(string(pubHex))
 	if len(pub) != ed25519.PublicKeySize {
-		fmt.Println("bad pubkey size"); os.Exit(1)
+		fmt.Println("bad pubkey size")
+		os.Exit(1)
 	}
 
 	entries, _ := filepath.Glob(filepath.Join(dir, "*.json"))
 	var files []string
 	for _, e := range entries {
-		if filepath.Base(e) == "index.json" { continue }
+		if filepath.Base(e) == "index.json" {
+			continue
+		}
 		files = append(files, e)
 	}
 	byPrev := make(map[string]Attestation)
@@ -111,7 +115,8 @@ func main() {
 	}
 
 	if bad > 0 {
-		fmt.Printf("\n❌ CHAIN HAS %d INVALID ENTRY(IES)\n", bad); os.Exit(1)
+		fmt.Printf("\n❌ CHAIN HAS %d INVALID ENTRY(IES)\n", bad)
+		os.Exit(1)
 	}
 	fmt.Println("\n✅ CHAIN INTACT")
 }

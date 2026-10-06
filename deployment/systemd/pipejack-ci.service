@@ -1,6 +1,6 @@
 [Unit]
 Description=PipeJack CI Server
-Documentation=https://github.com/ramKarthik57/pipejack-test
+Documentation=https://github.com/ramKarthik57/pipejack-platform
 After=docker.service network.target
 Requires=docker.service
 

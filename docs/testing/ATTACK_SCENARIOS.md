@@ -14,7 +14,7 @@ This document provides a detailed breakdown of the seven adversarial supply chai
 | **04** | Obfuscated Exec | Base64-encoded command decoded and piped to shell | `proctree` | `BLOCK (403)` | Canonical binary `/bin/sh` intercepted via `/proc` |
 | **05** | Multi-Stage Dropper | Staged downloader writing binary payload to `/tmp/dropper` | `fschecker` + `proctree` | `BLOCK (403)` | Unauthorized file creation and execution blocked |
 | **06** | Trickling Exfiltration| Rate-limited socket connections to external address | `egressfw` + `netmon` | `BLOCK (403)` | Outbound TCP SYN dropped by iptables netns chain |
-| **07** | Process/File Anomaly | Process explosion and rapid random file generation | `anomaly` + `proctree` | `BLOCK (403)` | Extreme z-score variance (\(|z| > 3.0\)) & process limit |
+| **07** | Process/File Anomaly | Process explosion & rapid file deviation | `anomaly` | `ALLOW (Advisory)` / `BLOCK` | Anomaly findings signed into attestation; quarantined when `anomaly_block: true` |
 
 ---
 
@@ -97,13 +97,15 @@ This document provides a detailed breakdown of the seven adversarial supply chai
 
 ---
 
-### Scenario 07: Statistical Anomaly Explosion (`07-anomaly`)
+### Scenario 07: Statistical Anomaly Deviation (`07-anomaly`)
 - **Directory**: `attacks/07-anomaly/`
 - **Mechanism**:
-  Simulates a compiler bomb or crypto-miner dependency spawning dozens of worker processes and mutating thousands of files.
+  Simulates an abnormal execution profile (e.g. process explosion, build duration stretching, rapid file churning) deviating significantly from established baseline models.
 - **Detection**:
-  The anomaly engine (`internal/anomaly`) evaluates four telemetry metrics against the rolling baseline. The process count and file mutation count exceed \(|z| > 3.0\), generating high-severity anomaly findings.
-- **Verdict**: `BLOCK` (HTTP 403 Forbidden).
+  The anomaly engine (`internal/anomaly`) computes z-scores for 4 telemetry metrics against a rolling 20-build window. Metrics with \(|z| > 3.0\) generate high-severity findings.
+- **Verdict & Enforcement**:
+  - **Default Production Mode (`anomaly_block: false`)**: Verdict remains `ALLOW (Advisory)`. Anomaly findings are logged and embedded into the immutable Ed25519-signed attestation record for forensic analysis, without breaking the pipeline during warmup.
+  - **Enforcement Mode (`anomaly_block: true`)**: Policy promotes the verdict to `BLOCK` (HTTP 403 Forbidden) and quarantines the image.
 
 ---
 

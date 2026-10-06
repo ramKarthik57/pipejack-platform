@@ -45,6 +45,12 @@ enforcement:
     allowed_destinations:
       - "127.0.0.1"
       - "::1"
+
+# Anomaly Configuration
+anomaly_enabled: true          # enable statistical telemetry evaluation (default: true)
+anomaly_threshold: 3.0         # z-score deviation cutoff |z| > 3.0 (default: 3.0)
+anomaly_min_baseline: 5        # min builds needed before evaluating anomalies (default: 5)
+anomaly_block: false           # false = advisory audit only; true = hard quarantine (default: false)
 ```
 
 ### Fields:
@@ -57,6 +63,10 @@ enforcement:
 - **`enforcement.filesystem.prohibited_mutation_patterns`**: Glob expressions where mutations are strictly prohibited (source files, manifests).
 - **`enforcement.network.allow_outbound`**: Boolean (`true`/`false`) indicating whether external internet connections are permitted.
 - **`enforcement.network.allowed_destinations`**: IP addresses or CIDR blocks permitted for network egress.
+- **`anomaly_enabled`**: Boolean enabling statistical baseline z-score evaluation.
+- **`anomaly_threshold`**: Float cutoff for outlier z-score detection (standard default: `3.0`).
+- **`anomaly_min_baseline`**: Integer minimum historical builds required before anomaly evaluation activates.
+- **`anomaly_block`**: Boolean determining enforcement mode (`false` = advisory audit signed in attestation; `true` = hard BLOCK and quarantine).
 
 ---
 
