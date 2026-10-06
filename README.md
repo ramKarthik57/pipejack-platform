@@ -1,5 +1,6 @@
 # PipeJack: Multi-Sensor Zero-Trust Security Platform for CI/CD Pipelines
 
+[![CI](https://github.com/ramKarthik57/pipejack-platform/actions/workflows/pipejack-ci.yml/badge.svg)](https://github.com/ramKarthik57/pipejack-platform/actions/workflows/pipejack-ci.yml)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](docs/testing/VALIDATION_REPORT.md)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Security Policy](https://img.shields.io/badge/Security-Enforced-success.svg)](SECURITY.md)
@@ -285,7 +286,8 @@ PipeJack includes an interactive demonstration console running on VM-2 (`http://
 
 ```
 pipejack-platform/
-├── .github/                            # GitHub community standards & issue templates
+├── .github/                            # CI workflows, community standards & issue templates
+│   ├── workflows/pipejack-ci.yml       # Automated Go test, vet, build & secret hygiene pipeline
 │   ├── ISSUE_TEMPLATE/                 # Structured bug and feature templates
 │   └── PULL_REQUEST_TEMPLATE.md        # Comprehensive pull request checklist
 ├── core/                               # Core Security Daemon & Subsystems (VM-2)

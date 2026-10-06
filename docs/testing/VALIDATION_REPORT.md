@@ -36,9 +36,9 @@ All core security daemon packages and CI orchestrator components were executed w
 
 ---
 
-## 2. Cryptographic Attestation Ledger Verification
+## 2. Cryptographic Attestation Ledger Verification (Historical Audit Evidence)
 
-The attestation ledger was verified using `services/custom-ci/verify-attest.go` across the complete historical build record collection in `/home/ubuntu/pipejack-attestations/`:
+The attestation ledger was verified using `services/custom-ci/verify-attest.go` across the complete historical build record collection in `/home/ubuntu/pipejack-attestations/` compiled during the system integration validation session:
 
 ```
 ============================================================
