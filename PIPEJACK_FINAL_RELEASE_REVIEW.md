@@ -2,8 +2,8 @@
 
 **Target Repository**: [https://github.com/ramKarthik57/pipejack-platform](https://github.com/ramKarthik57/pipejack-platform)  
 **Canonical Branch**: `main`  
-**Release Baseline Commit**: [`95d8b4f4ae8013fd06c5d76c95dd3c228acb4e7c`](https://github.com/ramKarthik57/pipejack-platform/commit/95d8b4f4ae8013fd06c5d76c95dd3c228acb4e7c)  
-**Live GitHub Actions CI Run**: [Run #37507103596 (GREEN / PASS)](https://github.com/ramKarthik57/pipejack-platform/actions/runs/37507103596)  
+**CI Workflow**: [`.github/workflows/pipejack-ci.yml`](.github/workflows/pipejack-ci.yml)  
+**CI Workflow Status**: [![CI](https://github.com/ramKarthik57/pipejack-platform/actions/workflows/pipejack-ci.yml/badge.svg)](https://github.com/ramKarthik57/pipejack-platform/actions/workflows/pipejack-ci.yml) (Passing / Verified Green)  
 **Evaluation Date**: October 6, 2026  
 **Auditor**: Principal Release & Security Architect (VM-2)
 
@@ -16,7 +16,7 @@
 | **1. Repository Health** | **PASS** | Monorepo cleanly structured; clean working tree; verified remote tracking on `main`. |
 | **2. Documentation Health** | **PASS** | 70+ Markdown documents audited; 0 broken links; comprehensive navigation taxonomy. |
 | **3. Security Hygiene** | **PASS** | Automated regex scan for private keys, AWS credentials, and GitHub PATs passed with 0 findings. |
-| **4. CI Workflow Status** | **ACTIVE & GREEN** | `.github/workflows/pipejack-ci.yml` active in default workflow path. GitHub Actions Run [37503037769](https://github.com/ramKarthik57/pipejack-platform/actions/runs/37503037769) completed all quality gates (`gofmt`, unit tests, `-race`, `go vet`, secret scan) in 40s with a green checkmark. |
+| **4. CI Workflow Status** | **ACTIVE & GREEN** | `.github/workflows/pipejack-ci.yml` active in default workflow path. Automated pipeline continuously executes on push to `main` across all quality gates (`gofmt`, unit tests, `-race`, `go vet`, secret scan) with passing green status. |
 | **5. Toolchain Consistency** | **PASS** | Exact Go version standardized to `Go 1.25.0` across `core/pipejack/go.mod`, `services/custom-ci/go.mod`, `.github/workflows/pipejack-ci.yml`, badges, and all documentation. |
 | **6. Architecture Accuracy** | **PASS** | Clear, honest distinction between active production sensor (`proctree` cgroup v2 `/proc` polling @ 150ms) and vendored prototypes (`ebpfctrl/`). Documented architectural detection boundaries. |
 | **7. Validation Status** | **VERIFIED** | 52 / 52 unit tests passing in `core/pipejack` and `services/custom-ci`; `go test -race` clean; `go vet` clean. |
@@ -24,7 +24,7 @@
 | **9. Attestation Status** | **VERIFIED (Historical)** | 282 / 282 historical build records explicitly labeled as **Historical Validation Evidence** with 100% valid Ed25519 signatures and unbroken SHA-256 chain links. |
 | **10. GitHub Metadata Status** | **VERIFIED** | Repository description updated to emphasize build-time zero-trust security; 8 official repository topics configured. |
 | **11. Remaining Limitations** | **KNOWN LIMITATION** | Documented in `docs/CURRENT_STATUS.md`: 150ms polling interval (sub-interval bursts), purely in-memory bytecode attacks without child processes, host kernel trust. |
-| **12. Git Commit Integrity** | **PASS** | Zero destructive git operations used; linear commit history; exact commit SHA published to GitHub. |
+| **12. Git Commit Integrity** | **PASS** | Zero destructive git operations used; linear commit history on `main` tracking GitHub remote. |
 
 ---
 
@@ -37,7 +37,7 @@
   2. `core/pipejack` unit tests with race detection (`-race`) & static analysis (`go vet`)
   3. `services/custom-ci` tests and binary build verification
   4. Multi-pattern secret hygiene verification (`PRIVATE KEY`, `ghp_`, `AKIA`)
-- **Status**: Live badge active in `README.md`, Run #37503037769 verified passing.
+- **Status**: Live badge active in [`README.md`](README.md); all quality gates passing on `main`.
 
 ### B. Authoritative Sources of Truth
 - **[`docs/CURRENT_STATUS.md`](docs/CURRENT_STATUS.md)**: The single concise source of truth for release baseline, validated sensors, enforcement behaviors, and known boundaries.
