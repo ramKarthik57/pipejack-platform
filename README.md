@@ -4,7 +4,7 @@
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](docs/testing/VALIDATION_REPORT.md)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Security Policy](https://img.shields.io/badge/Security-Enforced-success.svg)](SECURITY.md)
-[![Attestation Ledger](https://img.shields.io/badge/Attestation-Ed25519_Verified_(282+_Builds)-blueviolet.svg)](docs/testing/VALIDATION_REPORT.md)
+[![Attestation Ledger](https://img.shields.io/badge/Attestation-Ed25519_Verified_(330+_Builds)-blueviolet.svg)](docs/testing/VALIDATION_REPORT.md)
 [![Go Version](https://img.shields.io/badge/Go-1.25-00ADD8.svg?logo=go)](core/pipejack/go.mod)
 [![Status](https://img.shields.io/badge/Release_Status-CURRENT__TRUTH-brightgreen.svg)](docs/CURRENT_STATUS.md)
 [![Research](https://img.shields.io/badge/Research-CONTRIBUTION-blue.svg)](docs/research/CONTRIBUTION.md)
@@ -27,7 +27,7 @@
 - [9. Adversarial Attack Matrix (Scenarios 01–07)](#9-adversarial-attack-matrix-scenarios-0107)
 - [10. Authoritative Verification & Test Results](#10-authoritative-verification--test-results)
 - [11. Quick Start Guide](#11-quick-start-guide)
-- [12. Demonstration Web Console](#12-demonstration-web-console)
+- [12. Demonstration Web Console & Verified App Playground](#12-demonstration-web-console--verified-app-playground)
 - [13. Repository Layout](#13-repository-layout)
 - [14. Technical Limitations & Boundary Conditions](#14-technical-limitations--boundary-conditions)
 - [15. Future Roadmap](#15-future-roadmap)
@@ -88,7 +88,7 @@ PipeJack is architected around a distributed two-VM topology separating develope
 ```
 +-----------------------------------------------------------------------------------+
 | VM-1 (192.168.88.132) — Developer & Adversarial Lead                              |
-| • Applications: Java 17 Banking API, Calculator AST API, Node.js, Python 3.12     |
+| • Applications: Java 17 Banking API, Node.js Payment, Python 3.12 Calculator API   |
 | • Attack Suites: 7 Supply Chain Scenarios (01-07), evil-pkg, dropper fixtures    |
 | • Dispatcher: pipejack-upload.sh -> HTTP POST /upload (:8888)                     |
 +-----------------------------------------------------------------------------------+
@@ -113,7 +113,7 @@ PipeJack is architected around a distributed two-VM topology separating develope
 |                                                                                   |
 | 4. Cryptographic Attestation Ledger:                                              |
 |    • Computes canonical build hash -> Ed25519 digital signature -> prev_hash chain|
-|    • Audited & verified via verify-attest.go (282+ consecutive builds intact)     |
+|    • Audited & verified via verify-attest.go (330+ consecutive builds intact)     |
 +-----------------------------------------------------------------------------------+
 ```
 
@@ -189,7 +189,7 @@ PipeJack provides non-repudiable build provenance through an append-only cryptog
 2. **SHA-256 Digest (`self_hash`)**: Computed over the canonical record.
 3. **Cryptographic Linking (`prev_hash`)**: Each record includes the `self_hash` of the preceding build, creating an unbroken sequential cryptographic hash chain.
 4. **Digital Signature**: The payload is signed with an asymmetric Ed25519 private key.
-5. **Chain Verification**: Verified 100% intact across 282+ consecutive historical builds using `services/custom-ci/verify-attest.go`.
+5. **Chain Verification**: Verified 100% intact across 330+ consecutive builds using `services/custom-ci/verify-attest.go`.
 
 ---
 
@@ -232,9 +232,9 @@ Detailed in [docs/testing/VALIDATION_REPORT.md](docs/testing/VALIDATION_REPORT.m
   - `core/pipejack` (`proctree`, `fschecker`, `egressfw`, `netmon`, `anomaly`, `pdp`): 47 tests passed.
   - `services/custom-ci` (`quarantine_test.go`): 5 tests passed.
   - Race condition checking: `go test -race` clean.
-- **Cryptographic Attestation Audit**: **282 / 282 Records Verified (100%)**
+- **Cryptographic Attestation Audit**: **330+ Records Verified (100%)**
   - Zero broken chain links, zero signature verification errors.
-- **Multi-Stack Live Builds**: Clean and malicious builds validated across Java 17, Spring, Node.js 18, and Python 3.12.
+- **Multi-Stack Live Builds**: Clean and malicious builds validated across Java 17, Node.js 18, and Python 3.12.
 - **Adversarial Suite**: Scenarios 01–06 blocked & quarantined (HTTP 403 Forbidden across all evaluated benchmark attacks); Scenario 07 detected in telemetry & recorded in signed attestation (Advisory default; BLOCK when `anomaly_block: true`).
 - **Release Certification Review**: Comprehensive quality gate audit and release scorecard available at [PIPEJACK_FINAL_RELEASE_REVIEW.md](PIPEJACK_FINAL_RELEASE_REVIEW.md).
 
@@ -262,6 +262,9 @@ go run verify-attest.go
 # Submit clean Java workload (Expect HTTP 200 OK & Deployment)
 CI_ENDPOINT="http://192.168.88.133:8888" ./scripts/pipejack-upload.sh clean-java.tar.gz
 
+# Submit clean Python Calculator API workload (Expect HTTP 200 OK & Deployment)
+CI_ENDPOINT="http://192.168.88.133:8888" ./scripts/pipejack-upload.sh clean-python.tar.gz
+
 # Submit malicious workload (Expect HTTP 403 Forbidden & Quarantine)
 CI_ENDPOINT="http://192.168.88.133:8888" ./scripts/pipejack-upload.sh malicious-java.tar.gz
 
@@ -273,11 +276,15 @@ cd attacks && ./run-all.sh
 
 ---
 
-## 12. Demonstration Web Console
+## 12. Demonstration Web Console & Verified App Playground
 
 PipeJack includes an interactive demonstration console running on VM-2 (`http://192.168.88.133:8090`):
-- **Live Pipeline Monitor**: Real-time visualization of container creation, cgroup tracking, and sensor verdicts.
-- **Multi-Application Playground**: Direct interactive testing of deployed microservices (Java Banking API, Spring Calculator AST Engine, Node.js Payment Service, Python Analytics).
+- **Live Pipeline Monitor**: Real-time dual-terminal visualization of container creation, cgroup tracking, and sensor verdicts across VM-1 and VM-2.
+- **Verified Application Playground**: Direct interactive testing of deployed microservices:
+  - 🏦 **Banking API (Java 17)**: ACID balance checks and cryptographic transaction ledger.
+  - 🧮 **Calculator API (Python 3.12)**: AST-sanitized scientific and mathematical expression sandbox.
+  - 💳 **Payment Gateway (Node.js 18)**: PCI-DSS tokenized card checkout and webhook delivery.
+- **Strict Single-Artifact Isolation**: Only the application produced by the most recent `ALLOW` build is unlocked in the playground.
 - **Security Lockout Verification**: Dynamically locks application playgrounds when an uploaded build triggers policy quarantine.
 - **Attestation Explorer**: Real-time rendering of Ed25519 signatures and SHA-256 ledger chain linkages.
 
@@ -311,9 +318,9 @@ pipejack-platform/
 │       └── quarantine_test.go          # Quarantine regression tests
 ├── applications/                       # Production Client Workloads (VM-1)
 │   ├── banking-api/                    # Java 17 / Maven Banking Microservice
-│   ├── calculator-api/                 # Java 17 / Maven Safe AST Calculator
+│   ├── calculator-api/                 # Python 3.12 Safe AST Calculator
 │   ├── nodejs-app/                     # Node.js 18 Payment Service
-│   └── python-app/                     # Python 3.12 Real-Time Analytics
+│   └── python-app/                     # Python 3.12 Microservice Baseline
 ├── security-fixtures/                  # Adversarial Supply Chain Fixtures (VM-1)
 │   ├── nodejs-malicious/               # Malicious npm postinstall exfiltration
 │   ├── python-malicious/               # Malicious setup.py socket exfiltration

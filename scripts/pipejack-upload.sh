@@ -39,7 +39,7 @@ NOW() {
 
 FILE_SIZE=$(ls -lh "$TARFILE" | awk '{print $5}')
 FILE_SHA=$(sha256sum "$TARFILE" | awk '{print $1}')
-CI_ENDPOINT="${CI_ENDPOINT:-http://192.168.88.133:8888/upload}"
+CI_ENDPOINT="http://192.168.88.133:8888/upload"
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║     PIPEJACK SECURE CLIENT — BUILD PACKAGE UPLOADER    ║${RESET}"
@@ -112,8 +112,8 @@ elif [[ "$TARFILE" == *"node"* ]]; then
         NET_FINDING="DROPPED (Unauthorized egress socket to C2)"
     fi
 elif [[ "$TARFILE" == *"python"* ]]; then
-    PROJECT="Analytics Core (Python 3.12 / Wheel)"
-    APP_NAME="analytics-core"
+    PROJECT="Calculator API (Python 3.12 / Wheel)"
+    APP_NAME="calculator-api"
     if [ "$VERDICT" = "BLOCK" ]; then
         PROC_FINDING="INTERCEPTED (setup.py invoked /usr/bin/curl)"
         FS_FINDING="TAMPER DETECTED (Injected backdoor module)"

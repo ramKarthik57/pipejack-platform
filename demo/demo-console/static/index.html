@@ -174,7 +174,7 @@
               </div>
             </div>
             <div class="scenario-card-body">
-              <span class="scenario-sub">Analytics Microservice • Wheel packaging</span>
+              <span class="scenario-sub">Calculator API • Wheel packaging</span>
               <button class="btn btn-action" id="btn-clean-python" onclick="runScenario('clean-python')"><span class="btn-icon">▶</span> Run</button>
             </div>
           </div>
@@ -1358,7 +1358,7 @@
                 <div class="comp-preset-buttons">
                   <button class="btn btn-tiny btn-comp-preset active" onclick="loadComparisonPreset('java')">Java (Banking API)</button>
                   <button class="btn btn-tiny btn-comp-preset" onclick="loadComparisonPreset('node')">Node.js (Payment Service)</button>
-                  <button class="btn btn-tiny btn-comp-preset" onclick="loadComparisonPreset('python')">Python (Analytics Core)</button>
+                  <button class="btn btn-tiny btn-comp-preset" onclick="loadComparisonPreset('python')">Python (Calculator API)</button>
                 </div>
               </div>
 
@@ -1501,13 +1501,10 @@
                   🏦 Banking API (Java 17 - ACID Enforced)
                 </button>
                 <button class="app-tab-btn" id="app-btn-calc" onclick="switchPlaygroundApp('calc')">
-                  🧮 Calculator API (Safe AST Evaluator)
+                  🧮 Calculator API (Python 3.12 - Safe AST Evaluator)
                 </button>
                 <button class="app-tab-btn" id="app-btn-node" onclick="switchPlaygroundApp('node')">
                   💳 Payment Gateway (Node.js 18)
-                </button>
-                <button class="app-tab-btn" id="app-btn-python" onclick="switchPlaygroundApp('python')">
-                  📊 Analytics Core (Python 3.12)
                 </button>
               </div>
 
@@ -1791,138 +1788,6 @@
                 </div>
               </div>
 
-              <!-- SUB-VIEW 4: AI FRAUD DETECTION & RISK ANALYTICS (Python 3.12) -->
-              <div class="playground-subview" id="pg-subview-python" style="display: none;">
-                <!-- Microservices Inventory Strip -->
-                <div class="pg-ms-strip">
-                  <span class="pg-ms-title">RUNNING MICROSERVICES:</span>
-                  <span class="pg-ms-badge badge-status-valid">fraud-detection-model (:5001)</span>
-                  <span class="pg-ms-badge badge-status-valid">analytics-engine (:5002)</span>
-                  <span class="pg-ms-badge badge-status-valid">telemetry-collector (:5003)</span>
-                </div>
-
-                <div class="fraud-studio-layout">
-                  <!-- Left: Interactive Risk Parameter Simulator -->
-                  <div class="card fraud-form-card">
-                    <div class="card-header-styled">
-                      <h5>🔍 Real-Time Transaction Risk Simulator (Python 3.12 / XGBoost)</h5>
-                      <span class="status-tag tag-clean">INFERENCE ENGINE: v4.2</span>
-                    </div>
-
-                    <div class="form-row">
-                      <label>Simulated Transaction Amount ($):</label>
-                      <input type="number" class="form-input" id="fraud-amount" value="2450.00" min="1" step="50">
-                    </div>
-
-                    <div class="form-row-multi">
-                      <div class="form-col">
-                        <label>Origin Country / IP Geolocation:</label>
-                        <select class="form-input" id="fraud-geo">
-                          <option value="US">US - United States (Low Risk)</option>
-                          <option value="GB">GB - United Kingdom (Low Risk)</option>
-                          <option value="DE">DE - Germany (Low Risk)</option>
-                          <option value="CA">CA - Canada (Low Risk)</option>
-                          <option value="RU">RU - Russia (High-Risk Anomaly)</option>
-                          <option value="NG">NG - Nigeria (High-Risk Anomaly)</option>
-                        </select>
-                      </div>
-                      <div class="form-col">
-                        <label>Network IP Reputation:</label>
-                        <select class="form-input" id="fraud-ip-type">
-                          <option value="clean">Residential / Business Clean IP</option>
-                          <option value="vpn">Datacenter Proxy / Commercial VPN</option>
-                          <option value="tor">Tor Exit Node (Suspicious)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-row-multi">
-                      <div class="form-col">
-                        <label>Card Velocity (Tx / Min):</label>
-                        <input type="number" class="form-input" id="fraud-velocity" value="1" min="1" max="60">
-                      </div>
-                      <div class="form-col">
-                        <label>Account Maturity:</label>
-                        <select class="form-input" id="fraud-account-age">
-                          <option value="365">Established (> 1 Year)</option>
-                          <option value="30">Normal (30 Days)</option>
-                          <option value="5">Recent (< 7 Days)</option>
-                          <option value="0.5">Brand New (< 24 Hours)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-actions-row">
-                      <button type="button" class="btn btn-action" id="btn-fraud-assess" onclick="executeFraudAssessment()">
-                        <i class="fas fa-brain"></i> Run ML Fraud Risk Assessment
-                      </button>
-                      <button type="button" class="btn btn-secondary" onclick="setFraudPreset('anomaly')">
-                        <i class="fas fa-skull-crossbones"></i> Load Tor + Velocity Attack Preset
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Right: Real-Time Risk Score & Decision Gauge -->
-                  <div class="card fraud-score-card">
-                    <div class="card-header-styled">
-                      <h5>🎯 Real-Time ML Risk Assessment Verdict</h5>
-                      <span class="status-tag tag-clean" id="fraud-latency-badge">&lt; 1.2ms latency</span>
-                    </div>
-
-                    <div class="fraud-gauge-container">
-                      <div class="fraud-score-display">
-                        <span class="score-number" id="fraud-score-val">14</span>
-                        <span class="score-scale">/ 100</span>
-                      </div>
-                      <div class="fraud-verdict-box">
-                        <div class="fraud-tier-label" id="fraud-tier-val">LOW RISK</div>
-                        <div class="fraud-action-pill badge-status-valid" id="fraud-verdict-pill">AUTO-APPROVE</div>
-                      </div>
-                    </div>
-
-                    <!-- Feature Breakdown Bars -->
-                    <div class="fraud-features-list">
-                      <div class="feature-item">
-                        <div class="feat-top">
-                          <span>Network IP &amp; Geolocation</span>
-                          <span class="feat-weight" id="feat-geo-val">+3%</span>
-                        </div>
-                        <div class="feat-bar-bg"><div class="feat-bar-fill" id="feat-geo-bar" style="width: 15%; background: #10b981;"></div></div>
-                      </div>
-                      <div class="feature-item">
-                        <div class="feat-top">
-                          <span>Card Transaction Velocity</span>
-                          <span class="feat-weight" id="feat-vel-val">+1%</span>
-                        </div>
-                        <div class="feat-bar-bg"><div class="feat-bar-fill" id="feat-vel-bar" style="width: 10%; background: #10b981;"></div></div>
-                      </div>
-                      <div class="feature-item">
-                        <div class="feat-top">
-                          <span>Transaction Amount Outlier</span>
-                          <span class="feat-weight" id="feat-amt-val">+14%</span>
-                        </div>
-                        <div class="feat-bar-bg"><div class="feat-bar-fill" id="feat-amt-bar" style="width: 35%; background: #38bdf8;"></div></div>
-                      </div>
-                      <div class="feature-item">
-                        <div class="feat-top">
-                          <span>Account Maturity Factor</span>
-                          <span class="feat-weight" id="feat-age-val">0%</span>
-                        </div>
-                        <div class="feat-bar-bg"><div class="feat-bar-fill" id="feat-age-bar" style="width: 5%; background: #10b981;"></div></div>
-                      </div>
-                    </div>
-
-                    <!-- Decision Tree Path -->
-                    <div class="fraud-path-box">
-                      <strong>XGBoost Model Decision Inference Path:</strong>
-                      <div class="path-steps" id="fraud-path-steps">
-                        <!-- Populated dynamically -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
             </div>
 
           </div>
@@ -1994,6 +1859,6 @@
 
   <script src="/static/vendor/xterm.js"></script>
   <script src="/static/vendor/xterm-addon-fit.js"></script>
-  <script src="/static/app.js?v=3"></script>
+  <script src="/static/app.js?v=5"></script>
 </body>
 </html>

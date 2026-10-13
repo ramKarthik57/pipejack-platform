@@ -921,7 +921,7 @@ function getScenarioFriendlyName(key) {
     'clean-node': 'Clean Node.js (Payment Service)',
     'malicious-node': 'Malicious Node.js (Egress)',
     'malicious-node-egress': 'Malicious Node.js (Tamper)',
-    'clean-python': 'Clean Python (Analytics Microservice)',
+    'clean-python': 'Clean Python (Calculator API)',
     'malicious-python': 'Malicious Python (In-Memory Hook)',
     'malicious-python-egress': 'Malicious Python (Socket Exfil)',
     'clean-go': 'Clean Go (Payment Gateway)',
@@ -937,7 +937,7 @@ function getScenarioFriendlyName(key) {
 function getScenarioProjectName(key) {
   if (key.includes('java') || key.includes('banking')) return 'Banking API';
   if (key.includes('node')) return 'Payment Service';
-  if (key.includes('python')) return 'Analytics Core';
+  if (key.includes('python')) return 'Calculator API';
   if (key.includes('go')) return 'Payment Gateway';
   if (key.includes('c-') || key.includes('clean-c') || key.includes('malicious-c')) return 'Native Crypto Engine';
   if (key.includes('quarantine')) return 'Security Baseline';
@@ -1007,7 +1007,7 @@ async function runScenario(scenarioKey) {
   setTerminalIndicators('live');
 
   // Determine commands
-  const tarFile = (scenarioKey === 'anomaly' ? 'anomaly-demo.tar.gz' : scenarioKey + '.tar.gz');
+  const tarFile = (scenarioKey === 'anomaly' ? 'anomaly-demo.tar.gz' : (scenarioKey === 'quarantine-tamper' ? 'quarantine-fail-tamper.tar.gz' : scenarioKey + '.tar.gz'));
   const vm1Cmd = `./pipejack-upload.sh ${tarFile}`;
   const vm2Cmd = `tail -n 25 -f /var/log/pipejack-ci.log`;
 
@@ -2671,9 +2671,8 @@ let unlockedPlaygroundApp = 'banking';
 
 function getAppName(key) {
   switch(key) {
-    case 'calc': return 'Calculator API';
+    case 'calc': return 'Calculator API (Python 3.12)';
     case 'node': return 'Payment Gateway (Node.js 18)';
-    case 'python': return 'AI Fraud Risk Studio (Python 3.12)';
     default: return 'Banking API (Java 17)';
   }
 }
@@ -2698,7 +2697,7 @@ function switchPlaygroundApp(appKey) {
     return;
   }
   currentPlaygroundApp = appKey;
-  ['banking', 'calc', 'node', 'python'].forEach(k => {
+  ['banking', 'calc', 'node'].forEach(k => {
     const btn = document.getElementById(`app-btn-${k}`);
     const sub = document.getElementById(`pg-subview-${k}`);
     if (btn) {
@@ -2741,16 +2740,19 @@ async function updatePlaygroundState() {
   let appDisplayName = 'Banking API (Java 17)';
 
   if (activeBuildData) {
-    const rawTarget = (activeBuildData.project || activeBuildData.scenario_title || activeBuildData.scenario_key || '').toLowerCase();
-    if (rawTarget.includes('calc')) {
+    const rawTarget = [
+      activeBuildData.project,
+      activeBuildData.attestation?.project,
+      activeBuildData.scenario_title,
+      activeBuildData.scenario_key
+    ].filter(Boolean).join(' ').toLowerCase();
+
+    if (rawTarget.includes('calc') || rawTarget.includes('python') || rawTarget.includes('analytics')) {
       targetApp = 'calc';
-      appDisplayName = 'Calculator API (Safe AST Engine)';
+      appDisplayName = 'Calculator API (Python 3.12 - Safe AST Engine)';
     } else if (rawTarget.includes('node') || rawTarget.includes('payment') || rawTarget.includes('checkout')) {
       targetApp = 'node';
       appDisplayName = 'Payment Gateway (Node.js 18)';
-    } else if (rawTarget.includes('python') || rawTarget.includes('analytics') || rawTarget.includes('fraud')) {
-      targetApp = 'python';
-      appDisplayName = 'AI Fraud Risk Studio (Python 3.12)';
     } else {
       targetApp = 'banking';
       appDisplayName = 'Banking API (Java 17 / Maven)';
@@ -2764,7 +2766,7 @@ async function updatePlaygroundState() {
   if (statusText) statusText.textContent = `STATUS: ACTIVE & VERIFIED (${appDisplayName})`;
 
   // Update tabs: only unlock targetApp; lock the others!
-  const appKeys = ['banking', 'calc', 'node', 'python'];
+  const appKeys = ['banking', 'calc', 'node'];
   appKeys.forEach(k => {
     const btn = document.getElementById(`app-btn-${k}`);
     const sub = document.getElementById(`pg-subview-${k}`);
@@ -2777,7 +2779,6 @@ async function updatePlaygroundState() {
         if (k === 'banking') btn.innerHTML = '🏦 Banking API (Active)';
         else if (k === 'calc') btn.innerHTML = '🧮 Calculator API (Active)';
         else if (k === 'node') btn.innerHTML = '💳 Payment Gateway (Active)';
-        else if (k === 'python') btn.innerHTML = '🛡️ AI Fraud Studio (Active)';
       } else {
         btn.classList.remove('active');
         btn.classList.add('locked-app-btn');
@@ -2786,7 +2787,6 @@ async function updatePlaygroundState() {
         if (k === 'banking') btn.innerHTML = '🔒 Banking API (Locked)';
         else if (k === 'calc') btn.innerHTML = '🔒 Calculator API (Locked)';
         else if (k === 'node') btn.innerHTML = '🔒 Payment Gateway (Locked)';
-        else if (k === 'python') btn.innerHTML = '🔒 AI Fraud Studio (Locked)';
       }
     }
     if (sub) {
@@ -2799,6 +2799,8 @@ async function updatePlaygroundState() {
     await refreshBankingLedger();
   } else if (targetApp === 'node') {
     await refreshPaymentTransactions();
+  } else if (targetApp === 'calc') {
+    await executePlaygroundCalculator();
   }
 }
 
@@ -3254,7 +3256,7 @@ window.probeBlockedService = probeBlockedService;
 window.searchScenarios = searchScenarios;
 window.setUnlockedApp = function(k) {
   unlockedPlaygroundApp = k;
-  const appKeys = ['banking', 'calc', 'node', 'python'];
+  const appKeys = ['banking', 'calc', 'node'];
   appKeys.forEach(key => {
     const btn = document.getElementById(`app-btn-${key}`);
     const sub = document.getElementById(`pg-subview-${key}`);

@@ -165,13 +165,13 @@ SCENARIO_MAP = {
     },
     "clean-python": {
         "title": "Clean Python",
-        "subtitle": "Analytics Microservice",
+        "subtitle": "Calculator API",
         "language": "Python 3.12",
         "toolchain": "pip / Wheel",
         "file": os.path.join(ARTIFACTS_DIR, "clean-python.tar.gz"),
         "expected_verdict": "ALLOW",
         "expected_http": 200,
-        "description": "Clean Python analytics engine build with standard wheel packaging and Merkle root integrity verification."
+        "description": "Clean Python Calculator API build with standard wheel packaging and Merkle root integrity verification."
     },
     "malicious-python": {
         "title": "Malicious Python",
@@ -601,8 +601,8 @@ COMPARISON_DATA = {
         "artifact": {"status": "QUARANTINED", "summary": "Tagged with -quarantine; deployment aborted"}
     },
     "clean-python": {
-        "title": "Clean Python (Analytics Core)",
-        "project": "Analytics Core (Python 3.12 / Wheel)",
+        "title": "Clean Python (Calculator API)",
+        "project": "Calculator API (Python 3.12 / Wheel)",
         "expected_http": 200,
         "expected_verdict": "ALLOW",
         "process": {"status": "CLEAN", "summary": "Allowlisted binaries: python3, pip"},
@@ -614,7 +614,7 @@ COMPARISON_DATA = {
     },
     "malicious-python": {
         "title": "Malicious Python (Setup Hook Egress)",
-        "project": "Analytics Core (Python 3.12 / Wheel)",
+        "project": "Calculator API (Python 3.12 / Wheel)",
         "expected_http": 403,
         "expected_verdict": "BLOCK",
         "process": {"status": "CLEAN", "summary": "In-memory socket opened directly by python3.12"},
